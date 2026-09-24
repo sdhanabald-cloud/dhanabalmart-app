@@ -1,0 +1,31 @@
+server:
+  port: ${PORT:8080}
+  address: 0.0.0.0
+
+spring:
+  application:
+    name: DhanabalMart
+  datasource:
+    # URL will be parsed by DatabaseConfig if DATABASE_URL environment variable is provided (Render / Docker)
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/dhanabalmart}
+    username: ${SPRING_DATASOURCE_USERNAME:dhanabal_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:dhanabal_secure_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  sql:
+    init:
+      mode: always
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:DhanabalMartSuperSecretKey2026WithSufficientBitsForHMACSHA256Encryption!}
+    expiration-ms: 86400000 # 24 Hours

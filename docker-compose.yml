@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dhanabalmart-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: dhanabalmart
+      POSTGRES_USER: dhanabal_user
+      POSTGRES_PASSWORD: dhanabal_secure_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dhanabal_user -d dhanabalmart"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dhanabalmart-app
+    restart: always
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      NODE_ENV: production
+      DATABASE_URL: postgresql://dhanabal_user:dhanabal_secure_password@postgres:5432/dhanabalmart
+      JWT_SECRET: DhanabalMartSuperSecretKey2026WithSufficientBitsForHMACSHA256Encryption!
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+    driver: local

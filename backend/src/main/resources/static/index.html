@@ -1,0 +1,1315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DhanabalMart — Premier E-Commerce Marketplace</title>
+  <!-- Google Fonts for Luxury Metallic Headings & Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- React 18, React DOM, Babel, React Router 6 -->
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  
+  <style>
+    /* ========================================================
+       DhanabalMart Design System
+       Peacock Green: #063737 (Primary Background & Brand)
+       Light Pink:    #E8C9CF (Soft Accents, Cards, Subtle Highlights)
+       Brown:         #A25524 (Warm Earthy Accents & Buttons)
+       Olive:         #808000 (Success Badges, Secondary Accents)
+       Metallic Gold: Gradient #FFE57F -> #D4AF37 -> #AA771C
+       ======================================================== */
+    :root {
+      --color-peacock-green: #063737;
+      --color-peacock-dark: #032121;
+      --color-peacock-card: #084343;
+      --color-light-pink: #E8C9CF;
+      --color-brown: #A25524;
+      --color-brown-hover: #884318;
+      --color-olive: #808000;
+      --color-gold: #D4AF37;
+      --gold-gradient: linear-gradient(135deg, #FFE894 0%, #D4AF37 50%, #A67C1E 100%);
+      --gold-border: 1px solid rgba(212, 175, 55, 0.45);
+      --font-serif: 'Cinzel', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--color-peacock-green);
+      color: #FFFFFF;
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3, .brand-font { font-family: var(--font-serif); }
+
+    .gold-text {
+      background: var(--gold-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+      font-weight: 800;
+    }
+
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 1.5rem; width: 100%; }
+    
+    .dm-card {
+      background-color: var(--color-peacock-card);
+      border: var(--gold-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+      transition: all 0.25s ease;
+    }
+    .dm-card:hover { border-color: var(--color-gold); }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+      padding: 0.65rem 1.25rem; font-weight: 600; font-size: 0.9rem; border-radius: 8px;
+      border: none; cursor: pointer; text-decoration: none; transition: all 0.2s;
+    }
+    .btn-gold { background: var(--gold-gradient); color: #032121; font-weight: 700; }
+    .btn-gold:hover { transform: translateY(-1px); box-shadow: 0 4px 15px rgba(212,175,55,0.4); }
+    .btn-brown { background: var(--color-brown); color: #FFF; }
+    .btn-brown:hover { background: var(--color-brown-hover); }
+    .btn-olive { background: var(--color-olive); color: #FFF; }
+    .btn-outline { background: transparent; color: var(--color-gold); border: 1px solid var(--color-gold); }
+    .btn-outline:hover { background: rgba(212,175,55,0.15); color: #FFF; }
+    .btn-sm { padding: 0.35rem 0.75rem; font-size: 0.8rem; }
+
+    .badge {
+      display: inline-block; padding: 0.25rem 0.65rem; border-radius: 9999px;
+      font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .badge-gold { background: rgba(212,175,55,0.2); color: #FFF0A6; border: 1px solid var(--color-gold); }
+    .badge-pink { background: rgba(232,201,207,0.2); color: var(--color-light-pink); border: 1px solid var(--color-light-pink); }
+    .badge-olive { background: rgba(128,128,0,0.25); color: #bbf7d0; border: 1px solid var(--color-olive); }
+    .badge-brown { background: rgba(162,85,36,0.25); color: #fed7aa; border: 1px solid var(--color-brown); }
+    .badge-danger { background: rgba(220,38,38,0.2); color: #fca5a5; border: 1px solid #ef4444; }
+
+    .form-group { margin-bottom: 1.25rem; }
+    .form-label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--color-light-pink); margin-bottom: 0.4rem; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 0.75rem 1rem; background-color: var(--color-peacock-dark);
+      border: 1px solid rgba(232,201,207,0.25); border-radius: 8px; color: #FFF; font-family: var(--font-sans);
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none; border-color: var(--color-gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.2);
+    }
+
+    .table-responsive { width: 100%; overflow-x: auto; }
+    .dm-table { width: 100%; border-collapse: collapse; text-align: left; }
+    .dm-table th { background-color: var(--color-peacock-dark); color: var(--color-gold); font-family: var(--font-serif); padding: 1rem; border-bottom: 1px solid rgba(212,175,55,0.3); font-size: 0.85rem; }
+    .dm-table td { padding: 1rem; border-bottom: 1px solid rgba(232,201,207,0.1); font-size: 0.9rem; }
+    .dm-table tr:hover { background-color: rgba(11,79,79,0.4); }
+
+    .grid { display: grid; gap: 1.5rem; }
+    .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    @media (max-width: 900px) {
+      .grid-cols-4, .grid-cols-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 600px) {
+      .grid-cols-4, .grid-cols-3, .grid-cols-2 { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <script type="text/babel">
+    const { useState, useEffect, createContext, useContext } = React;
+
+    // --- API CLIENT ---
+    const API = {
+      async request(endpoint, options = {}) {
+        const token = localStorage.getItem('dhanabal_token');
+        const headers = { 'Content-Type': 'application/json', ...(options.headers || {}) };
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const res = await fetch(endpoint, { credentials: 'omit', ...options, headers });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `HTTP error ${res.status}`);
+        return data;
+      },
+      getProducts(params = '') { return this.request(`/api/products${params ? '?' + params : ''}`); },
+      getCategories() { return this.request('/api/categories'); },
+      login(creds) { return this.request('/api/auth/login', { method: 'POST', body: JSON.stringify(creds) }); },
+      register(user) { return this.request('/api/auth/register', { method: 'POST', body: JSON.stringify(user) }); },
+      getProfile() { return this.request('/api/auth/me'); },
+      getCart() { return this.request('/api/cart'); },
+      addToCart(productId, quantity = 1) { return this.request('/api/cart', { method: 'POST', body: JSON.stringify({ productId, quantity }) }); },
+      updateCartItem(itemId, quantity) { return this.request(`/api/cart/items/${itemId}`, { method: 'PUT', body: JSON.stringify({ quantity }) }); },
+      removeFromCart(itemId) { return this.request(`/api/cart/items/${itemId}`, { method: 'DELETE' }); },
+      checkout(payload) { return this.request('/api/orders', { method: 'POST', body: JSON.stringify(payload) }); },
+      getBuyerOrders() { return this.request('/api/orders'); },
+      getSellerProducts() { return this.request('/api/products/seller/me'); },
+      createProduct(p) { return this.request('/api/products', { method: 'POST', body: JSON.stringify(p) }); },
+      deleteProduct(id) { return this.request(`/api/products/${id}`, { method: 'DELETE' }); },
+      getSellerOrders() { return this.request('/api/orders/seller/me'); },
+      updateOrderStatus(id, status) { return this.request(`/api/orders/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }); },
+      getAdminStats() { return this.request('/api/admin/stats'); },
+      getAdminSellers() { return this.request('/api/admin/sellers'); },
+      getAdminBuyers() { return this.request('/api/admin/buyers'); },
+      updateSellerApproval(id, approvalStatus) { return this.request(`/api/admin/sellers/${id}`, { method: 'PUT', body: JSON.stringify({ approvalStatus }) }); },
+      updateUserStatus(id, status) { return this.request(`/api/admin/users/${id}/status`, { method: 'PUT', body: JSON.stringify({ status }) }); },
+      getAdminOrders() { return this.request('/api/admin/orders'); },
+      getAdminProducts() { return this.request('/api/admin/products'); }
+    };
+
+    // --- MAIN APP COMPONENT ---
+    function App() {
+      const [currentRoute, setCurrentRoute] = useState(window.location.pathname || '/');
+      const [user, setUser] = useState(() => {
+        try { return JSON.parse(localStorage.getItem('dhanabal_user')); } catch(e) { return null; }
+      });
+      const [cartCount, setCartCount] = useState(0);
+
+      // Listen for browser popstate
+      useEffect(() => {
+        const onPopState = () => setCurrentRoute(window.location.pathname);
+        window.addEventListener('popstate', onPopState);
+        return () => window.removeEventListener('popstate', onPopState);
+      }, []);
+
+      const navigate = (path) => {
+        window.history.pushState({}, '', path);
+        setCurrentRoute(path);
+        window.scrollTo(0, 0);
+      };
+
+      const refreshCart = async () => {
+        if (!user || user.role !== 'ROLE_BUYER') return;
+        try {
+          const cart = await API.getCart();
+          if (cart && cart.items) {
+            setCartCount(cart.items.reduce((sum, i) => sum + i.quantity, 0));
+          }
+        } catch(e) { setCartCount(0); }
+      };
+
+      useEffect(() => { refreshCart(); }, [user]);
+
+      const handleLoginSuccess = (authData) => {
+        localStorage.setItem('dhanabal_token', authData.token);
+        localStorage.setItem('dhanabal_user', JSON.stringify(authData));
+        setUser(authData);
+        if (authData.role === 'ROLE_ADMIN') navigate('/admin/dashboard');
+        else if (authData.role === 'ROLE_SELLER') navigate('/seller/dashboard');
+        else navigate('/buyer/dashboard');
+      };
+
+      const handleLogout = () => {
+        localStorage.removeItem('dhanabal_token');
+        localStorage.removeItem('dhanabal_user');
+        setUser(null);
+        setCartCount(0);
+        navigate('/');
+      };
+
+      return (
+        <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+          {/* Navigation Bar */}
+          <nav style={{ backgroundColor: 'var(--color-peacock-dark)', borderBottom: 'var(--gold-border)', position: 'sticky', top: 0, zIndex: 100 }}>
+            <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', height: '75px' }}>
+              <div onClick={() => navigate('/')} style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--gold-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#032121', fontWeight: '900', fontSize: '1.3rem', fontFamily: 'var(--font-serif)' }}>D</div>
+                <div>
+                  <span className="brand-font gold-text" style={{ fontSize: '1.5rem', fontWeight: '800' }}>DhanabalMart</span>
+                  <div style={{ fontSize: '0.65rem', color: 'var(--color-light-pink)', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Grand Marketplace</div>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '1.25rem' }}>
+                <span onClick={() => navigate('/')} style={{ cursor: 'pointer', color: currentRoute === '/' ? 'var(--color-gold)' : '#FFF', fontWeight: '600' }}>Home</span>
+                <span onClick={() => navigate('/products')} style={{ cursor: 'pointer', color: currentRoute === '/products' ? 'var(--color-gold)' : '#FFF', fontWeight: '600' }}>Catalog</span>
+                <span onClick={() => navigate('/about')} style={{ cursor: 'pointer', color: currentRoute === '/about' ? 'var(--color-gold)' : '#FFF', fontWeight: '600' }}>About</span>
+
+                {(!user || user.role === 'ROLE_BUYER') && (
+                  <button onClick={() => navigate('/cart')} className="btn btn-outline btn-sm" style={{ position: 'relative' }}>
+                    🛒 Cart {cartCount > 0 && <span style={{ background: 'var(--color-brown)', color: '#FFF', padding: '1px 6px', borderRadius: '10px', fontSize: '0.75rem', marginLeft: '4px' }}>{cartCount}</span>}
+                  </button>
+                )}
+
+                {user ? (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    {user.role === 'ROLE_ADMIN' && <button onClick={() => navigate('/admin/dashboard')} className="btn btn-olive btn-sm">🛡️ Admin Console</button>}
+                    {user.role === 'ROLE_SELLER' && <button onClick={() => navigate('/seller/dashboard')} className="btn btn-brown btn-sm">🏪 Seller Hub</button>}
+                    {user.role === 'ROLE_BUYER' && <button onClick={() => navigate('/buyer/dashboard')} className="btn btn-gold btn-sm">👤 My Account</button>}
+                    <button onClick={handleLogout} className="btn btn-outline btn-sm" style={{ borderColor: '#ef4444', color: '#fca5a5' }}>Logout</button>
+                  </div>
+                ) : (
+                  <button onClick={() => navigate('/login')} className="btn btn-gold btn-sm">Sign In</button>
+                )}
+              </div>
+            </div>
+          </nav>
+
+          {/* Body Content Router */}
+          <main style={{ flexGrow: 1 }}>
+            {currentRoute === '/' && <HomePage navigate={navigate} onAddToCart={refreshCart} user={user} />}
+            {currentRoute === '/products' && <ProductsPage navigate={navigate} onAddToCart={refreshCart} user={user} />}
+            {currentRoute === '/about' && <AboutPage navigate={navigate} />}
+            {currentRoute === '/login' && <LoginSelectPage navigate={navigate} />}
+            
+            {/* 3 Dedicated Login Gateways */}
+            {currentRoute === '/login/admin' && <LoginPage role="ADMIN" onLogin={handleLoginSuccess} navigate={navigate} />}
+            {currentRoute === '/login/seller' && <LoginPage role="SELLER" onLogin={handleLoginSuccess} navigate={navigate} />}
+            {currentRoute === '/login/buyer' && <LoginPage role="BUYER" onLogin={handleLoginSuccess} navigate={navigate} />}
+            
+            {/* Registration */}
+            {currentRoute === '/register/buyer' && <RegisterPage role="BUYER" onRegister={handleLoginSuccess} navigate={navigate} />}
+            {currentRoute === '/register/seller' && <RegisterPage role="SELLER" onRegister={handleLoginSuccess} navigate={navigate} />}
+
+            {/* Buyer Pages */}
+            {currentRoute === '/cart' && <CartPage navigate={navigate} refreshCart={refreshCart} />}
+            {currentRoute === '/checkout' && <CheckoutPage navigate={navigate} refreshCart={refreshCart} />}
+            {currentRoute === '/buyer/dashboard' && <BuyerDashboardPage navigate={navigate} user={user} />}
+            {currentRoute === '/buyer/orders' && <BuyerOrdersPage navigate={navigate} />}
+            {currentRoute === '/buyer/profile' && <BuyerProfilePage user={user} />}
+
+            {/* Seller Pages */}
+            {currentRoute === '/seller/dashboard' && <SellerDashboardPage navigate={navigate} user={user} />}
+            {currentRoute === '/seller/products' && <SellerProductsPage navigate={navigate} />}
+            {currentRoute === '/seller/products/add' && <SellerAddProductPage navigate={navigate} />}
+            {currentRoute === '/seller/orders' && <SellerOrdersPage navigate={navigate} />}
+            {currentRoute === '/seller/profile' && <SellerProfilePage user={user} />}
+
+            {/* Admin Pages */}
+            {currentRoute === '/admin/dashboard' && <AdminDashboardPage navigate={navigate} />}
+            {currentRoute === '/admin/sellers' && <AdminSellersPage navigate={navigate} />}
+            {currentRoute === '/admin/buyers' && <AdminBuyersPage navigate={navigate} />}
+            {currentRoute === '/admin/products' && <AdminProductsPage navigate={navigate} />}
+            {currentRoute === '/admin/orders' && <AdminOrdersPage navigate={navigate} />}
+            {currentRoute === '/admin/reports' && <AdminReportsPage navigate={navigate} />}
+          </main>
+
+          {/* Footer */}
+          <footer style={{ backgroundColor: 'var(--color-peacock-dark)', borderTop: 'var(--gold-border)', marginTop: '4rem', padding: '3rem 0 1.5rem' }}>
+            <div className="container" style={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', gap: '2rem' }}>
+              <div>
+                <span className="brand-font gold-text" style={{ fontSize: '1.4rem' }}>DhanabalMart</span>
+                <p style={{ color: 'var(--color-light-pink)', fontSize: '0.85rem', maxWidth: '340px', marginTop: '0.5rem' }}>
+                  The premier e-commerce marketplace dedicated to heritage crafts, pure silks, estate spices, and Ayurvedic wellness.
+                </p>
+                <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.4rem' }}>
+                  <span className="badge badge-gold">Docker Ready</span>
+                  <span className="badge badge-olive">PostgreSQL</span>
+                  <span className="badge badge-pink">Render</span>
+                </div>
+              </div>
+
+              <div>
+                <h4 style={{ color: 'var(--color-gold)', marginBottom: '0.75rem', fontFamily: 'var(--font-serif)' }}>Three Login Portals</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem' }}>
+                  <span onClick={() => navigate('/login/buyer')} style={{ cursor: 'pointer', color: 'var(--color-light-pink)' }}>Buyer Login (/login/buyer)</span>
+                  <span onClick={() => navigate('/login/seller')} style={{ cursor: 'pointer', color: 'var(--color-light-pink)' }}>Seller Login (/login/seller)</span>
+                  <span onClick={() => navigate('/login/admin')} style={{ cursor: 'pointer', color: 'var(--color-light-pink)' }}>Admin Login (/login/admin)</span>
+                </div>
+              </div>
+
+              <div>
+                <h4 style={{ color: 'var(--color-gold)', marginBottom: '0.75rem', fontFamily: 'var(--font-serif)' }}>System Status</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', fontSize: '0.85rem' }}>
+                  <a href="/health" target="_blank" style={{ color: 'var(--color-gold)', textDecoration: 'none' }}>Health Check (/health)</a>
+                  <span style={{ color: 'var(--color-light-pink)' }}>Runtime: Java 17 + Spring Boot 3</span>
+                  <span style={{ color: 'var(--color-light-pink)' }}>Port: process.env.PORT (0.0.0.0)</span>
+                </div>
+              </div>
+            </div>
+            <div className="container" style={{ borderTop: '1px solid rgba(232,201,207,0.1)', marginTop: '2rem', paddingTop: '1rem', textAlign: 'center', fontSize: '0.8rem', color: 'var(--color-light-pink)' }}>
+              &copy; {new Date().getFullYear()} DhanabalMart. Production Ready for GitHub & Render Deployment.
+            </div>
+          </footer>
+        </div>
+      );
+    }
+
+    // --- HOME PAGE ---
+    function HomePage({ navigate, onAddToCart, user }) {
+      const [products, setProducts] = useState([]);
+      const [categories, setCategories] = useState([]);
+
+      useEffect(() => {
+        API.getProducts().then(res => setProducts(res.slice(0, 6))).catch(console.error);
+        API.getCategories().then(setCategories).catch(console.error);
+      }, []);
+
+      const handleAdd = async (p) => {
+        if (!user) return navigate('/login/buyer');
+        try {
+          await API.addToCart(p.id, 1);
+          onAddToCart();
+          alert(`Added "${p.name}" to cart!`);
+        } catch(e) { alert(e.message); }
+      };
+
+      return (
+        <div>
+          {/* Hero */}
+          <div style={{ padding: '5rem 0', textAlign: 'center', background: 'radial-gradient(circle at center, rgba(11,79,79,0.8) 0%, rgba(6,55,55,0.95) 70%, var(--color-peacock-dark) 100%)', borderBottom: 'var(--gold-border)' }}>
+            <div className="container">
+              <span className="badge badge-gold" style={{ marginBottom: '1rem' }}>✨ Welcome to the Grand Marketplace</span>
+              <h1 className="gold-text" style={{ fontSize: 'clamp(2.2rem, 5vw, 3.8rem)', marginBottom: '1rem' }}>
+                Curated Elegance & Heritage Crafts
+              </h1>
+              <p style={{ color: 'var(--color-light-pink)', maxWidth: '680px', margin: '0 auto 2rem', fontSize: '1.15rem' }}>
+                Authentic Kanchipuram pure silks, Malabar black pepper, single-origin spices, and sacred handcrafted bronze decor directly from master artisans.
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+                <button onClick={() => navigate('/products')} className="btn btn-gold" style={{ padding: '0.8rem 2rem', fontSize: '1.05rem' }}>Browse Catalog</button>
+                <button onClick={() => navigate('/login/seller')} className="btn btn-brown" style={{ padding: '0.8rem 2rem', fontSize: '1.05rem' }}>Sell on DhanabalMart</button>
+              </div>
+            </div>
+          </div>
+
+          {/* Categories */}
+          <div className="container" style={{ padding: '4rem 1.5rem' }}>
+            <h2 className="gold-text" style={{ fontSize: '2rem', marginBottom: '2rem', textAlign: 'center' }}>Featured Collections</h2>
+            <div className="grid grid-cols-3">
+              {categories.map(c => (
+                <div key={c.id} onClick={() => navigate('/products')} className="dm-card" style={{ cursor: 'pointer', height: '180px', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', backgroundImage: `linear-gradient(to top, rgba(3,33,33,0.9) 20%, transparent 100%), url(${c.imageUrl})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                  <h3 style={{ color: 'var(--color-gold)' }}>{c.name}</h3>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--color-light-pink)' }}>{c.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Trending Products */}
+          <div style={{ backgroundColor: 'rgba(3,33,33,0.5)', padding: '4rem 0' }}>
+            <div className="container">
+              <h2 className="gold-text" style={{ fontSize: '2rem', marginBottom: '2rem', textAlign: 'center' }}>Trending Masterpieces</h2>
+              <div className="grid grid-cols-3">
+                {products.map(p => (
+                  <div key={p.id} className="dm-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 0, overflow: 'hidden' }}>
+                    <img src={p.imageUrl} alt={p.name} style={{ width: '100%', height: '220px', objectFit: 'cover' }} />
+                    <div style={{ padding: '1.25rem' }}>
+                      <span className="badge badge-gold" style={{ marginBottom: '0.5rem' }}>{p.category?.name}</span>
+                      <h3 style={{ fontSize: '1.1rem', marginBottom: '0.4rem' }}>{p.name}</h3>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--color-light-pink)', marginBottom: '1rem', minHeight: '40px' }}>{p.description.substring(0, 90)}...</p>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--color-gold)', fontFamily: 'var(--font-serif)' }}>₹{Number(p.price).toLocaleString('en-IN')}</div>
+                        <button onClick={() => handleAdd(p)} className="btn btn-gold btn-sm">Add to Cart</button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- PRODUCTS CATALOG PAGE ---
+    function ProductsPage({ navigate, onAddToCart, user }) {
+      const [products, setProducts] = useState([]);
+      const [categories, setCategories] = useState([]);
+      const [search, setSearch] = useState('');
+      const [selectedCat, setSelectedCat] = useState('');
+
+      const load = () => {
+        const query = [];
+        if (selectedCat) query.push(`categoryId=${selectedCat}`);
+        if (search) query.push(`search=${encodeURIComponent(search)}`);
+        API.getProducts(query.join('&')).then(setProducts).catch(console.error);
+      };
+
+      useEffect(() => {
+        API.getCategories().then(setCategories).catch(console.error);
+        load();
+      }, [selectedCat]);
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem 6rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '2.5rem' }}>
+            <h1 className="gold-text" style={{ fontSize: '2.5rem' }}>Marketplace Catalog</h1>
+            <p style={{ color: 'var(--color-light-pink)' }}>Explore authentic treasures directly from verified artisans</p>
+          </div>
+
+          <div className="dm-card" style={{ marginBottom: '2.5rem', display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <input
+              type="text"
+              placeholder="Search products by title or keywords..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="form-input"
+              style={{ flex: '1 1 300px' }}
+            />
+            <button onClick={load} className="btn btn-gold">Search</button>
+            <select value={selectedCat} onChange={e => setSelectedCat(e.target.value)} className="form-select" style={{ width: '220px' }}>
+              <option value="">All Categories</option>
+              {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+          </div>
+
+          <div className="grid grid-cols-3">
+            {products.map(p => (
+              <div key={p.id} className="dm-card" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: 0, overflow: 'hidden' }}>
+                <img src={p.imageUrl} alt={p.name} style={{ width: '100%', height: '220px', objectFit: 'cover' }} />
+                <div style={{ padding: '1.25rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.4rem' }}>
+                    <span className="badge badge-gold">{p.category?.name}</span>
+                    <span className="badge badge-olive">{p.stockQuantity} in stock</span>
+                  </div>
+                  <h3 style={{ fontSize: '1.1rem', marginBottom: '0.4rem' }}>{p.name}</h3>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--color-light-pink)', marginBottom: '0.5rem' }}>Sold by: {p.seller?.storeName}</div>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--color-light-pink)', marginBottom: '1rem' }}>{p.description}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <div style={{ fontSize: '1.4rem', fontWeight: '800', color: 'var(--color-gold)', fontFamily: 'var(--font-serif)' }}>₹{Number(p.price).toLocaleString('en-IN')}</div>
+                    <button onClick={async () => {
+                      if (!user) return navigate('/login/buyer');
+                      try { await API.addToCart(p.id, 1); onAddToCart(); alert(`Added to cart!`); } catch(e) { alert(e.message); }
+                    }} className="btn btn-gold btn-sm">Add to Cart</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // --- ABOUT PAGE ---
+    function AboutPage({ navigate }) {
+      return (
+        <div className="container" style={{ padding: '4rem 1.5rem', maxWidth: '860px' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <span className="badge badge-gold" style={{ marginBottom: '0.5rem' }}>Heritage & Trust</span>
+            <h1 className="gold-text" style={{ fontSize: '2.5rem' }}>About DhanabalMart</h1>
+            <p style={{ color: 'var(--color-light-pink)', fontSize: '1.1rem', marginTop: '0.5rem' }}>
+              The premier e-commerce marketplace dedicated to traditional crafts, handlooms, spices, and organic wellness.
+            </p>
+          </div>
+
+          <div className="dm-card" style={{ marginBottom: '2rem' }}>
+            <h3 style={{ color: 'var(--color-gold)', marginBottom: '0.75rem' }}>Our Mission</h3>
+            <p style={{ color: 'var(--color-light-pink)', lineHeight: '1.8' }}>
+              DhanabalMart bridges the gap between verified independent weavers, metalcraft artisans, and spice planters across India with conscious consumers. With direct-to-consumer traceability, we eliminate unfair intermediaries while ensuring authentic heritage items reach your home.
+            </p>
+          </div>
+
+          <div className="dm-card" style={{ marginBottom: '2rem' }}>
+            <h3 style={{ color: 'var(--color-gold)', marginBottom: '0.75rem' }}>Docker & Render Ready Architecture</h3>
+            <p style={{ color: 'var(--color-light-pink)', lineHeight: '1.8' }}>
+              Built with an enterprise <strong>Java Spring Boot 3</strong> backend, a modern <strong>React & Vite</strong> single-page frontend, and an ACID-compliant <strong>PostgreSQL</strong> relational database. Configured for zero-hassle containerized deployment on Render with dynamic <code>0.0.0.0:process.env.PORT</code> binding.
+            </p>
+          </div>
+
+          <div style={{ textAlign: 'center', marginTop: '2.5rem' }}>
+            <button onClick={() => navigate('/products')} className="btn btn-gold">Explore the Marketplace</button>
+          </div>
+        </div>
+      );
+    }
+
+    // --- LOGIN SELECTION PAGE ---
+    function LoginSelectPage({ navigate }) {
+      return (
+        <div className="container" style={{ padding: '5rem 1.5rem' }}>
+          <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+            <span className="badge badge-gold" style={{ marginBottom: '0.5rem' }}>Multi-Role Architecture</span>
+            <h1 className="gold-text" style={{ fontSize: '2.8rem' }}>Choose Your Destination Portal</h1>
+            <p style={{ color: 'var(--color-light-pink)', fontSize: '1.1rem' }}>Select your account type to access your dedicated dashboard.</p>
+          </div>
+
+          <div className="grid grid-cols-3">
+            <div className="dm-card" style={{ textAlign: 'center', padding: '2.5rem 1.5rem' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🛍️</div>
+              <span className="badge badge-pink" style={{ marginBottom: '0.5rem' }}>Customer Portal</span>
+              <h2 style={{ marginBottom: '0.75rem' }}>Buyer Account</h2>
+              <p style={{ color: 'var(--color-light-pink)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                Browse curated collections, manage shopping cart, and track orders.
+              </p>
+              <button onClick={() => navigate('/login/buyer')} className="btn btn-gold" style={{ width: '100%' }}>Buyer Sign In</button>
+            </div>
+
+            <div className="dm-card" style={{ textAlign: 'center', padding: '2.5rem 1.5rem', borderColor: 'var(--color-gold)' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🏪</div>
+              <span className="badge badge-brown" style={{ marginBottom: '0.5rem' }}>Merchant Hub</span>
+              <h2 style={{ marginBottom: '0.75rem' }}>Seller Portal</h2>
+              <p style={{ color: 'var(--color-light-pink)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                Publish artisan goods, manage real-time stock, and fulfill customer orders.
+              </p>
+              <button onClick={() => navigate('/login/seller')} className="btn btn-brown" style={{ width: '100%' }}>Seller Sign In</button>
+            </div>
+
+            <div className="dm-card" style={{ textAlign: 'center', padding: '2.5rem 1.5rem' }}>
+              <div style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🛡️</div>
+              <span className="badge badge-olive" style={{ marginBottom: '0.5rem' }}>Platform Control</span>
+              <h2 style={{ marginBottom: '0.75rem' }}>Admin Gateway</h2>
+              <p style={{ color: 'var(--color-light-pink)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
+                Supervise users, approve merchants, audit products, and inspect financial metrics.
+              </p>
+              <button onClick={() => navigate('/login/admin')} className="btn btn-outline" style={{ width: '100%' }}>Admin Sign In</button>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- THREE LOGIN MODULES (ADMIN / SELLER / BUYER) ---
+    function LoginPage({ role, onLogin, navigate }) {
+      const defaultEmail = role === 'ADMIN' ? 'admin@dhanabalmart.com' : (role === 'SELLER' ? 'seller1@dhanabalmart.com' : 'buyer1@gmail.com');
+      const defaultPass = role === 'ADMIN' ? 'Admin@123' : (role === 'SELLER' ? 'Seller@123' : 'Buyer@123');
+
+      const [email, setEmail] = useState(defaultEmail);
+      const [password, setPassword] = useState(defaultPass);
+      const [error, setError] = useState('');
+      const [loading, setLoading] = useState(false);
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+        try {
+          const authData = await API.login({ email, password, role });
+          onLogin(authData);
+        } catch(err) {
+          setError(err.message || 'Authentication failed. Please verify credentials.');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      const title = role === 'ADMIN' ? 'Admin Portal Login' : (role === 'SELLER' ? 'Seller Portal Login' : 'Buyer Account Sign In');
+      const badge = role === 'ADMIN' ? 'badge-olive' : (role === 'SELLER' ? 'badge-brown' : 'badge-pink');
+
+      return (
+        <div className="container" style={{ padding: '4rem 1.5rem', display: 'flex', justifyContent: 'center' }}>
+          <div className="dm-card" style={{ width: '100%', maxWidth: '440px', padding: '2.5rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+              <span className={`badge ${badge}`} style={{ marginBottom: '0.5rem' }}>{role} PORTAL</span>
+              <h1 className="gold-text" style={{ fontSize: '1.8rem' }}>{title}</h1>
+            </div>
+
+            {error && <div style={{ background: 'rgba(220,38,38,0.2)', border: '1px solid #ef4444', color: '#fca5a5', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem', fontSize: '0.85rem' }}>{error}</div>}
+
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label className="form-label">Email Address</label>
+                <input type="email" required value={email} onChange={e => setEmail(e.target.value)} className="form-input" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Password</label>
+                <input type="password" required value={password} onChange={e => setPassword(e.target.value)} className="form-input" />
+              </div>
+              <button type="submit" disabled={loading} className={`btn ${role === 'SELLER' ? 'btn-brown' : 'btn-gold'}`} style={{ width: '100%', padding: '0.8rem', fontSize: '1rem', marginTop: '0.5rem' }}>
+                {loading ? 'Authenticating...' : `Access ${role} Portal`}
+              </button>
+            </form>
+
+            <div style={{ background: 'rgba(232,201,207,0.08)', borderRadius: '8px', padding: '0.75rem', marginTop: '1.25rem', fontSize: '0.8rem', border: '1px solid rgba(232,201,207,0.2)' }}>
+              <strong style={{ color: 'var(--color-gold)' }}>Demo Credentials:</strong>
+              <div>Email: <code>{defaultEmail}</code></div>
+              <div>Password: <code>{defaultPass}</code></div>
+            </div>
+
+            {role === 'BUYER' && (
+              <div style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.85rem' }}>
+                Don't have an account? <span onClick={() => navigate('/register/buyer')} style={{ color: 'var(--color-gold)', cursor: 'pointer', fontWeight: '700' }}>Register here</span>
+              </div>
+            )}
+            {role === 'SELLER' && (
+              <div style={{ textAlign: 'center', marginTop: '1.25rem', fontSize: '0.85rem' }}>
+                New merchant? <span onClick={() => navigate('/register/seller')} style={{ color: 'var(--color-gold)', cursor: 'pointer', fontWeight: '700' }}>Register store here</span>
+              </div>
+            )}
+          </div>
+        </div>
+      );
+    }
+
+    // --- REGISTRATION PAGE ---
+    function RegisterPage({ role, onRegister, navigate }) {
+      const [form, setForm] = useState({ fullName: '', email: '', password: '', phone: '', storeName: '', businessAddress: '', taxId: '', shippingAddress: '', city: 'Chennai', postalCode: '600001' });
+      const [error, setError] = useState('');
+      const [loading, setLoading] = useState(false);
+
+      const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+        setLoading(true);
+        try {
+          const authData = await API.register({ ...form, role });
+          onRegister(authData);
+        } catch(err) {
+          setError(err.message || 'Registration failed.');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      return (
+        <div className="container" style={{ padding: '4rem 1.5rem', display: 'flex', justifyContent: 'center' }}>
+          <div className="dm-card" style={{ width: '100%', maxWidth: '540px', padding: '2.5rem' }}>
+            <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+              <h1 className="gold-text" style={{ fontSize: '1.8rem' }}>Create {role === 'SELLER' ? 'Seller Store' : 'Buyer Account'}</h1>
+            </div>
+
+            {error && <div style={{ background: 'rgba(220,38,38,0.2)', border: '1px solid #ef4444', color: '#fca5a5', padding: '0.75rem', borderRadius: '8px', marginBottom: '1rem' }}>{error}</div>}
+
+            <form onSubmit={handleSubmit}>
+              <div className="grid grid-cols-2">
+                <div className="form-group">
+                  <label className="form-label">Full Name *</label>
+                  <input type="text" required value={form.fullName} onChange={e => setForm({...form, fullName: e.target.value})} className="form-input" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Phone *</label>
+                  <input type="tel" required value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} className="form-input" />
+                </div>
+              </div>
+              <div className="grid grid-cols-2">
+                <div className="form-group">
+                  <label className="form-label">Email *</label>
+                  <input type="email" required value={form.email} onChange={e => setForm({...form, email: e.target.value})} className="form-input" />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Password *</label>
+                  <input type="password" required value={form.password} onChange={e => setForm({...form, password: e.target.value})} className="form-input" />
+                </div>
+              </div>
+
+              {role === 'SELLER' ? (
+                <>
+                  <div className="grid grid-cols-2">
+                    <div className="form-group">
+                      <label className="form-label">Store Brand Name *</label>
+                      <input type="text" required value={form.storeName} onChange={e => setForm({...form, storeName: e.target.value})} className="form-input" />
+                    </div>
+                    <div className="form-group">
+                      <label className="form-label">GSTIN / Tax ID</label>
+                      <input type="text" value={form.taxId} onChange={e => setForm({...form, taxId: e.target.value})} className="form-input" />
+                    </div>
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Business / Warehouse Address *</label>
+                    <textarea required value={form.businessAddress} onChange={e => setForm({...form, businessAddress: e.target.value})} className="form-textarea" rows="2" />
+                  </div>
+                </>
+              ) : (
+                <div className="form-group">
+                  <label className="form-label">Default Delivery Address *</label>
+                  <textarea required value={form.shippingAddress} onChange={e => setForm({...form, shippingAddress: e.target.value})} className="form-textarea" rows="2" />
+                </div>
+              )}
+
+              <button type="submit" disabled={loading} className="btn btn-gold" style={{ width: '100%', padding: '0.8rem', marginTop: '0.5rem' }}>
+                {loading ? 'Creating...' : 'Register Account'}
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    // --- CART PAGE ---
+    function CartPage({ navigate, refreshCart }) {
+      const [cart, setCart] = useState(null);
+
+      const load = () => API.getCart().then(setCart).catch(console.error);
+      useEffect(() => { load(); }, []);
+
+      const items = cart?.items || [];
+      const subtotal = items.reduce((sum, i) => sum + (Number(i.priceAtAddition) * i.quantity), 0);
+
+      const handleUpdate = async (id, current, delta) => {
+        const next = current + delta;
+        if (next <= 0) {
+          await API.removeFromCart(id);
+        } else {
+          await API.updateCartItem(id, next);
+        }
+        load();
+        refreshCart();
+      };
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem 6rem' }}>
+          <h1 className="gold-text" style={{ fontSize: '2.5rem', marginBottom: '2rem' }}>Shopping Bag ({items.length})</h1>
+          {items.length === 0 ? (
+            <div className="dm-card" style={{ textAlign: 'center', padding: '4rem' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🛍️</div>
+              <h3>Your cart is empty</h3>
+              <p style={{ color: 'var(--color-light-pink)', margin: '0.5rem 0 1.5rem' }}>Discover pure silks and estate spices in our catalog.</p>
+              <button onClick={() => navigate('/products')} className="btn btn-gold">Browse Catalog</button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-3" style={{ gap: '2rem' }}>
+              <div style={{ gridColumn: 'span 2' }}>
+                <div className="dm-card" style={{ padding: 0, overflow: 'hidden' }}>
+                  {items.map(item => (
+                    <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1.25rem', borderBottom: '1px solid rgba(232,201,207,0.1)' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <img src={item.product?.imageUrl} style={{ width: '60px', height: '60px', objectFit: 'cover', borderRadius: '6px' }} />
+                        <div>
+                          <div style={{ fontWeight: '700' }}>{item.product?.name}</div>
+                          <div style={{ fontSize: '0.8rem', color: 'var(--color-light-pink)' }}>₹{Number(item.priceAtAddition).toLocaleString('en-IN')} each</div>
+                        </div>
+                      </div>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <button onClick={() => handleUpdate(item.id, item.quantity, -1)} className="btn btn-outline btn-sm">-</button>
+                        <span style={{ fontWeight: '700', minWidth: '24px', textAlign: 'center' }}>{item.quantity}</span>
+                        <button onClick={() => handleUpdate(item.id, item.quantity, 1)} className="btn btn-outline btn-sm">+</button>
+                      </div>
+                      <div style={{ fontWeight: '800', color: 'var(--color-gold)' }}>
+                        ₹{(Number(item.priceAtAddition) * item.quantity).toLocaleString('en-IN')}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="dm-card" style={{ height: 'fit-content' }}>
+                <h3 style={{ color: 'var(--color-gold)', marginBottom: '1rem' }}>Order Summary</h3>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <span>Subtotal:</span>
+                  <strong>₹{subtotal.toLocaleString('en-IN')}</strong>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', color: 'var(--color-light-pink)' }}>
+                  <span>Shipping:</span>
+                  <span style={{ color: 'var(--color-gold)' }}>FREE</span>
+                </div>
+                <div style={{ borderTop: '1px solid var(--color-gold)', paddingTop: '1rem', marginTop: '1rem', display: 'flex', justifyContent: 'space-between', fontSize: '1.2rem', fontWeight: '800' }}>
+                  <span>Total:</span>
+                  <span className="gold-text">₹{subtotal.toLocaleString('en-IN')}</span>
+                </div>
+                <button onClick={() => navigate('/checkout')} className="btn btn-gold" style={{ width: '100%', marginTop: '1.5rem' }}>Proceed to Checkout</button>
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    // --- CHECKOUT PAGE ---
+    function CheckoutPage({ navigate, refreshCart }) {
+      const [address, setAddress] = useState('Flat 402, Peacock Heights, Adyar, Chennai - 600020');
+      const [loading, setLoading] = useState(false);
+
+      const handleOrder = async (e) => {
+        e.preventDefault();
+        setLoading(true);
+        try {
+          const res = await API.checkout({ shippingAddress: address, paymentMethod: 'CARD' });
+          refreshCart();
+          alert(`Order placed successfully! Reference: ${res.orderNumber}`);
+          navigate('/buyer/orders');
+        } catch(err) {
+          alert(err.message || 'Checkout failed');
+        } finally {
+          setLoading(false);
+        }
+      };
+
+      return (
+        <div className="container" style={{ padding: '4rem 1.5rem', maxWidth: '600px' }}>
+          <div className="dm-card">
+            <h1 className="gold-text" style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>Confirm & Checkout</h1>
+            <form onSubmit={handleOrder}>
+              <div className="form-group">
+                <label className="form-label">Delivery Shipping Address *</label>
+                <textarea required rows="3" value={address} onChange={e => setAddress(e.target.value)} className="form-textarea" />
+              </div>
+              <div className="form-group">
+                <label className="form-label">Payment Option</label>
+                <div style={{ padding: '0.75rem', background: 'var(--color-peacock-dark)', borderRadius: '8px', border: '1px solid var(--color-gold)' }}>
+                  💳 Card / UPI / NetBanking (Simulated Instant Payment)
+                </div>
+              </div>
+              <button type="submit" disabled={loading} className="btn btn-gold" style={{ width: '100%', padding: '0.85rem' }}>
+                {loading ? 'Processing...' : 'Place Order & Complete Payment'}
+              </button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    // --- BUYER DASHBOARD & ORDERS ---
+    function BuyerDashboardPage({ navigate, user }) {
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <h1 className="gold-text" style={{ fontSize: '2.4rem', marginBottom: '0.5rem' }}>Buyer Dashboard</h1>
+          <p style={{ color: 'var(--color-light-pink)', marginBottom: '2.5rem' }}>Welcome, {user?.fullName} ({user?.email})</p>
+          <div className="grid grid-cols-3">
+            <div onClick={() => navigate('/products')} className="dm-card" style={{ cursor: 'pointer', textAlign: 'center' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🛍️</div>
+              <h3>Explore Catalog</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-light-pink)', marginTop: '0.5rem' }}>Shop handcrafted goods</p>
+            </div>
+            <div onClick={() => navigate('/buyer/orders')} className="dm-card" style={{ cursor: 'pointer', textAlign: 'center' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📦</div>
+              <h3>My Orders</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-light-pink)', marginTop: '0.5rem' }}>View past purchases</p>
+            </div>
+            <div onClick={() => navigate('/cart')} className="dm-card" style={{ cursor: 'pointer', textAlign: 'center' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🛒</div>
+              <h3>My Cart</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-light-pink)', marginTop: '0.5rem' }}>View active items</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function BuyerOrdersPage({ navigate }) {
+      const [orders, setOrders] = useState([]);
+      useEffect(() => { API.getBuyerOrders().then(setOrders).catch(console.error); }, []);
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <h1 className="gold-text" style={{ fontSize: '2.2rem', marginBottom: '2rem' }}>My Orders ({orders.length})</h1>
+          <div className="dm-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <table className="dm-table">
+              <thead><tr><th>Order #</th><th>Date</th><th>Total</th><th>Status</th><th>Address</th></tr></thead>
+              <tbody>
+                {orders.map(o => (
+                  <tr key={o.id}>
+                    <td style={{ fontWeight: '700', color: 'var(--color-gold)' }}>{o.orderNumber}</td>
+                    <td>{new Date(o.createdAt).toLocaleDateString()}</td>
+                    <td style={{ fontWeight: '700' }}>₹{Number(o.totalAmount).toLocaleString('en-IN')}</td>
+                    <td><span className="badge badge-gold">{o.orderStatus}</span></td>
+                    <td style={{ fontSize: '0.8rem', color: 'var(--color-light-pink)' }}>{o.shippingAddress}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    function BuyerProfilePage({ user }) {
+      return (
+        <div className="container" style={{ padding: '4rem 1.5rem', maxWidth: '500px' }}>
+          <div className="dm-card">
+            <h1 className="gold-text" style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Buyer Profile</h1>
+            <div style={{ marginBottom: '1rem' }}><label className="form-label">Full Name</label><input type="text" disabled value={user?.fullName || ''} className="form-input" /></div>
+            <div style={{ marginBottom: '1rem' }}><label className="form-label">Email</label><input type="email" disabled value={user?.email || ''} className="form-input" /></div>
+            <div style={{ marginBottom: '1rem' }}><label className="form-label">Role</label><span className="badge badge-pink">{user?.role}</span></div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- SELLER WORKSPACE PAGES ---
+    function SellerDashboardPage({ navigate, user }) {
+      const [products, setProducts] = useState([]);
+      const [orders, setOrders] = useState([]);
+
+      useEffect(() => {
+        API.getSellerProducts().then(setProducts).catch(console.error);
+        API.getSellerOrders().then(setOrders).catch(console.error);
+      }, []);
+
+      const revenue = orders.reduce((sum, i) => sum + Number(i.totalPrice), 0);
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+            <div>
+              <span className="badge badge-brown">Seller Portal</span>
+              <h1 className="gold-text" style={{ fontSize: '2.4rem' }}>{user?.storeName || 'Merchant Store'}</h1>
+            </div>
+            <div style={{ display: 'flex', gap: '0.75rem' }}>
+              <button onClick={() => navigate('/seller/products/add')} className="btn btn-gold">+ Add Product</button>
+              <button onClick={() => navigate('/seller/orders')} className="btn btn-brown">Customer Orders ({orders.length})</button>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3" style={{ marginBottom: '3rem' }}>
+            <div className="dm-card">
+              <span style={{ color: 'var(--color-light-pink)' }}>Active Products</span>
+              <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--color-gold)' }}>{products.length}</div>
+            </div>
+            <div className="dm-card">
+              <span style={{ color: 'var(--color-light-pink)' }}>Fulfillment Orders</span>
+              <div style={{ fontSize: '2rem', fontWeight: '800', color: '#bbf7d0' }}>{orders.length}</div>
+            </div>
+            <div className="dm-card">
+              <span style={{ color: 'var(--color-light-pink)' }}>Total Sales Value</span>
+              <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--color-gold)' }}>₹{revenue.toLocaleString('en-IN')}</div>
+            </div>
+          </div>
+
+          <div className="dm-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <h3 style={{ padding: '1rem', color: 'var(--color-gold)' }}>My Products Preview</h3>
+            <table className="dm-table">
+              <thead><tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th></tr></thead>
+              <tbody>
+                {products.slice(0, 5).map(p => (
+                  <tr key={p.id}>
+                    <td style={{ fontWeight: '700' }}>{p.name}</td>
+                    <td>{p.category?.name}</td>
+                    <td style={{ color: 'var(--color-gold)', fontWeight: '700' }}>₹{Number(p.price).toLocaleString('en-IN')}</td>
+                    <td>{p.stockQuantity} units</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    function SellerProductsPage({ navigate }) {
+      const [products, setProducts] = useState([]);
+      const load = () => API.getSellerProducts().then(setProducts).catch(console.error);
+      useEffect(() => { load(); }, []);
+
+      const handleDelete = async (id, name) => {
+        if (!confirm(`Delete product "${name}"?`)) return;
+        await API.deleteProduct(id);
+        load();
+      };
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+            <h1 className="gold-text" style={{ fontSize: '2.2rem' }}>My Products Catalog ({products.length})</h1>
+            <button onClick={() => navigate('/seller/products/add')} className="btn btn-gold">+ Add Product</button>
+          </div>
+          <div className="dm-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <table className="dm-table">
+              <thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Action</th></tr></thead>
+              <tbody>
+                {products.map(p => (
+                  <tr key={p.id}>
+                    <td style={{ fontWeight: '700' }}>{p.name}</td>
+                    <td>{p.category?.name}</td>
+                    <td style={{ color: 'var(--color-gold)', fontWeight: '700' }}>₹{Number(p.price).toLocaleString('en-IN')}</td>
+                    <td>{p.stockQuantity} pcs</td>
+                    <td>
+                      <button onClick={() => handleDelete(p.id, p.name)} className="btn btn-sm" style={{ background: 'rgba(220,38,38,0.2)', border: '1px solid #ef4444', color: '#fca5a5' }}>Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    function SellerAddProductPage({ navigate }) {
+      const [form, setForm] = useState({ name: '', description: '', price: '', stockQuantity: '', categoryId: '1', imageUrl: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=600&q=80', status: 'ACTIVE' });
+      const [cats, setCats] = useState([]);
+      useEffect(() => { API.getCategories().then(setCats).catch(console.error); }, []);
+
+      const handleAdd = async (e) => {
+        e.preventDefault();
+        try {
+          await API.createProduct({ ...form, price: parseFloat(form.price), stockQuantity: parseInt(form.stockQuantity, 10), categoryId: parseInt(form.categoryId, 10) });
+          alert('Product added successfully!');
+          navigate('/seller/products');
+        } catch(err) { alert(err.message); }
+      };
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem', maxWidth: '640px' }}>
+          <div className="dm-card">
+            <h1 className="gold-text" style={{ fontSize: '2rem', marginBottom: '1.5rem' }}>Add Product to Marketplace</h1>
+            <form onSubmit={handleAdd}>
+              <div className="form-group"><label className="form-label">Name *</label><input type="text" required value={form.name} onChange={e => setForm({...form, name: e.target.value})} className="form-input" /></div>
+              <div className="grid grid-cols-2">
+                <div className="form-group"><label className="form-label">Category</label><select value={form.categoryId} onChange={e => setForm({...form, categoryId: e.target.value})} className="form-select">{cats.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}</select></div>
+                <div className="form-group"><label className="form-label">Price (₹) *</label><input type="number" required value={form.price} onChange={e => setForm({...form, price: e.target.value})} className="form-input" /></div>
+              </div>
+              <div className="grid grid-cols-2">
+                <div className="form-group"><label className="form-label">Stock Quantity *</label><input type="number" required value={form.stockQuantity} onChange={e => setForm({...form, stockQuantity: e.target.value})} className="form-input" /></div>
+                <div className="form-group"><label className="form-label">Image URL</label><input type="url" value={form.imageUrl} onChange={e => setForm({...form, imageUrl: e.target.value})} className="form-input" /></div>
+              </div>
+              <div className="form-group"><label className="form-label">Description *</label><textarea required rows="3" value={form.description} onChange={e => setForm({...form, description: e.target.value})} className="form-textarea" /></div>
+              <button type="submit" className="btn btn-gold" style={{ width: '100%', padding: '0.8rem' }}>Publish Product</button>
+            </form>
+          </div>
+        </div>
+      );
+    }
+
+    function SellerOrdersPage({ navigate }) {
+      const [items, setItems] = useState([]);
+      const load = () => API.getSellerOrders().then(setItems).catch(console.error);
+      useEffect(() => { load(); }, []);
+
+      const updateStatus = async (id, status) => {
+        try {
+          await API.updateOrderStatus(id, status);
+          alert(`Status changed to ${status}`);
+          load();
+        } catch(e) { alert(e.message); }
+      };
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <h1 className="gold-text" style={{ fontSize: '2.2rem', marginBottom: '2rem' }}>Customer Orders ({items.length})</h1>
+          <div className="dm-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <table className="dm-table">
+              <thead><tr><th>Product</th><th>Qty</th><th>Payout</th><th>Status Control</th></tr></thead>
+              <tbody>
+                {items.map(i => (
+                  <tr key={i.id}>
+                    <td style={{ fontWeight: '700' }}>{i.product?.name}</td>
+                    <td>{i.quantity} pcs</td>
+                    <td style={{ color: 'var(--color-gold)', fontWeight: '700' }}>₹{Number(i.totalPrice).toLocaleString('en-IN')}</td>
+                    <td>
+                      <select defaultValue="PROCESSING" onChange={e => updateStatus(i.id, e.target.value)} className="form-select" style={{ width: '140px', padding: '0.35rem' }}>
+                        <option value="PROCESSING">PROCESSING</option>
+                        <option value="SHIPPED">SHIPPED</option>
+                        <option value="DELIVERED">DELIVERED</option>
+                        <option value="CANCELLED">CANCELLED</option>
+                      </select>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    function SellerProfilePage({ user }) {
+      return (
+        <div className="container" style={{ padding: '4rem 1.5rem', maxWidth: '500px' }}>
+          <div className="dm-card">
+            <h1 className="gold-text" style={{ fontSize: '1.8rem', marginBottom: '1.5rem' }}>Seller Profile</h1>
+            <div style={{ marginBottom: '1rem' }}><label className="form-label">Store Brand Name</label><input type="text" disabled value={user?.storeName || 'Royal Kanchipuram Silks'} className="form-input" /></div>
+            <div style={{ marginBottom: '1rem' }}><label className="form-label">Merchant Email</label><input type="email" disabled value={user?.email || ''} className="form-input" /></div>
+            <div style={{ marginBottom: '1rem' }}><label className="form-label">Approval Status</label><span className="badge badge-olive">{user?.approvalStatus || 'APPROVED'}</span></div>
+          </div>
+        </div>
+      );
+    }
+
+    // --- ADMIN CONSOLE PAGES ---
+    function AdminDashboardPage({ navigate }) {
+      const [stats, setStats] = useState(null);
+      useEffect(() => { API.getAdminStats().then(setStats).catch(console.error); }, []);
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <div style={{ marginBottom: '2.5rem' }}>
+            <span className="badge badge-olive">Platform Administration</span>
+            <h1 className="gold-text" style={{ fontSize: '2.4rem' }}>Admin Executive Console</h1>
+          </div>
+
+          <div className="grid grid-cols-4" style={{ marginBottom: '3rem' }}>
+            <div className="dm-card">
+              <span style={{ color: 'var(--color-light-pink)' }}>Marketplace GMV</span>
+              <div style={{ fontSize: '1.8rem', fontWeight: '800', color: 'var(--color-gold)' }}>₹{Number(stats?.totalRevenue || 0).toLocaleString('en-IN')}</div>
+            </div>
+            <div className="dm-card">
+              <span style={{ color: 'var(--color-light-pink)' }}>Total Orders</span>
+              <div style={{ fontSize: '2rem', fontWeight: '800', color: '#bbf7d0' }}>{stats?.totalOrders || 0}</div>
+            </div>
+            <div className="dm-card">
+              <span style={{ color: 'var(--color-light-pink)' }}>Pending Sellers</span>
+              <div style={{ fontSize: '2rem', fontWeight: '800', color: stats?.pendingSellers > 0 ? '#fca5a5' : '#bbf7d0' }}>{stats?.pendingSellers || 0}</div>
+            </div>
+            <div className="dm-card">
+              <span style={{ color: 'var(--color-light-pink)' }}>Registered Users</span>
+              <div style={{ fontSize: '2rem', fontWeight: '800', color: 'var(--color-gold)' }}>{stats?.totalUsers || 0}</div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-3">
+            <div onClick={() => navigate('/admin/sellers')} className="dm-card" style={{ cursor: 'pointer', textAlign: 'center' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>🏪</div>
+              <h3>Manage Sellers</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-light-pink)' }}>Approve or reject stores</p>
+            </div>
+            <div onClick={() => navigate('/admin/buyers')} className="dm-card" style={{ cursor: 'pointer', textAlign: 'center' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>👥</div>
+              <h3>Manage Buyers</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-light-pink)' }}>Audit user accounts</p>
+            </div>
+            <div onClick={() => navigate('/admin/products')} className="dm-card" style={{ cursor: 'pointer', textAlign: 'center' }}>
+              <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>📦</div>
+              <h3>Platform Catalog</h3>
+              <p style={{ fontSize: '0.85rem', color: 'var(--color-light-pink)' }}>Review all live goods</p>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    function AdminSellersPage({ navigate }) {
+      const [sellers, setSellers] = useState([]);
+      const load = () => API.getAdminSellers().then(setSellers).catch(console.error);
+      useEffect(() => { load(); }, []);
+
+      const updateApproval = async (id, status) => {
+        try {
+          await API.updateSellerApproval(id, status);
+          alert(`Seller status set to ${status}`);
+          load();
+        } catch(e) { alert(e.message); }
+      };
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <h1 className="gold-text" style={{ fontSize: '2.2rem', marginBottom: '2rem' }}>Manage Sellers ({sellers.length})</h1>
+          <div className="dm-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <table className="dm-table">
+              <thead><tr><th>Store</th><th>Representative</th><th>Tax ID</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody>
+                {sellers.map(s => (
+                  <tr key={s.id}>
+                    <td style={{ fontWeight: '700', color: 'var(--color-gold)' }}>{s.storeName}</td>
+                    <td>{s.user?.fullName} ({s.user?.email})</td>
+                    <td><code>{s.taxId || 'N/A'}</code></td>
+                    <td><span className={`badge ${s.approvalStatus === 'APPROVED' ? 'badge-olive' : 'badge-danger'}`}>{s.approvalStatus}</span></td>
+                    <td>
+                      <div style={{ display: 'flex', gap: '0.35rem' }}>
+                        <button onClick={() => updateApproval(s.id, 'APPROVED')} className="btn btn-olive btn-sm">Approve</button>
+                        <button onClick={() => updateApproval(s.id, 'REJECTED')} className="btn btn-sm" style={{ background: 'rgba(220,38,38,0.2)', border: '1px solid #ef4444', color: '#fca5a5' }}>Reject</button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    function AdminBuyersPage({ navigate }) {
+      const [buyers, setBuyers] = useState([]);
+      const load = () => API.getAdminBuyers().then(setBuyers).catch(console.error);
+      useEffect(() => { load(); }, []);
+
+      const toggleStatus = async (userId, current) => {
+        const next = current === 'ACTIVE' ? 'BLOCKED' : 'ACTIVE';
+        await API.updateUserStatus(userId, next);
+        load();
+      };
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <h1 className="gold-text" style={{ fontSize: '2.2rem', marginBottom: '2rem' }}>Manage Buyers ({buyers.length})</h1>
+          <div className="dm-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <table className="dm-table">
+              <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody>
+                {buyers.map(b => (
+                  <tr key={b.id}>
+                    <td style={{ fontWeight: '700' }}>{b.user?.fullName}</td>
+                    <td>{b.user?.email}</td>
+                    <td>{b.user?.phone || 'N/A'}</td>
+                    <td><span className={`badge ${b.user?.status === 'ACTIVE' ? 'badge-olive' : 'badge-danger'}`}>{b.user?.status}</span></td>
+                    <td>
+                      <button onClick={() => toggleStatus(b.user.id, b.user?.status)} className="btn btn-sm btn-outline">
+                        {b.user?.status === 'ACTIVE' ? 'Block Account' : 'Reactivate'}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    function AdminProductsPage({ navigate }) {
+      const [products, setProducts] = useState([]);
+      const load = () => API.getAdminProducts().then(setProducts).catch(console.error);
+      useEffect(() => { load(); }, []);
+
+      const handleDelete = async (id, name) => {
+        if (!confirm(`Delete product "${name}"?`)) return;
+        await API.deleteProduct(id);
+        load();
+      };
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <h1 className="gold-text" style={{ fontSize: '2.2rem', marginBottom: '2rem' }}>All Marketplace Products ({products.length})</h1>
+          <div className="dm-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <table className="dm-table">
+              <thead><tr><th>Name</th><th>Store</th><th>Category</th><th>Price</th><th>Stock</th><th>Action</th></tr></thead>
+              <tbody>
+                {products.map(p => (
+                  <tr key={p.id}>
+                    <td style={{ fontWeight: '700' }}>{p.name}</td>
+                    <td style={{ color: 'var(--color-gold)' }}>{p.seller?.storeName}</td>
+                    <td>{p.category?.name}</td>
+                    <td>₹{Number(p.price).toLocaleString('en-IN')}</td>
+                    <td>{p.stockQuantity}</td>
+                    <td>
+                      <button onClick={() => handleDelete(p.id, p.name)} className="btn btn-sm" style={{ background: 'rgba(220,38,38,0.2)', border: '1px solid #ef4444', color: '#fca5a5' }}>Delete</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    function AdminOrdersPage({ navigate }) {
+      const [orders, setOrders] = useState([]);
+      useEffect(() => { API.getAdminOrders().then(setOrders).catch(console.error); }, []);
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <h1 className="gold-text" style={{ fontSize: '2.2rem', marginBottom: '2rem' }}>All Marketplace Orders ({orders.length})</h1>
+          <div className="dm-card" style={{ padding: 0, overflow: 'hidden' }}>
+            <table className="dm-table">
+              <thead><tr><th>Order #</th><th>Date</th><th>Buyer</th><th>Total</th><th>Status</th></tr></thead>
+              <tbody>
+                {orders.map(o => (
+                  <tr key={o.id}>
+                    <td style={{ fontWeight: '700', color: 'var(--color-gold)' }}>{o.orderNumber}</td>
+                    <td>{new Date(o.createdAt).toLocaleDateString()}</td>
+                    <td>{o.buyer?.user?.fullName}</td>
+                    <td style={{ fontWeight: '800' }}>₹{Number(o.totalAmount).toLocaleString('en-IN')}</td>
+                    <td><span className="badge badge-gold">{o.orderStatus}</span></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      );
+    }
+
+    function AdminReportsPage({ navigate }) {
+      const [stats, setStats] = useState(null);
+      useEffect(() => { API.getAdminStats().then(setStats).catch(console.error); }, []);
+
+      return (
+        <div className="container" style={{ padding: '3.5rem 1.5rem' }}>
+          <h1 className="gold-text" style={{ fontSize: '2.2rem', marginBottom: '2rem' }}>Platform Financial Reports</h1>
+          <div className="dm-card" style={{ marginBottom: '2rem' }}>
+            <h3 style={{ color: 'var(--color-gold)', marginBottom: '1rem' }}>Summary Statistics</h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '1rem' }}>
+              <div>Gross Marketplace GMV: <strong style={{ color: 'var(--color-gold)' }}>₹{Number(stats?.totalRevenue || 0).toLocaleString('en-IN')}</strong></div>
+              <div>Total Orders Completed: <strong>{stats?.totalOrders || 0}</strong></div>
+              <div>Active Onboarded Merchants: <strong>{stats?.approvedSellers || 0}</strong></div>
+              <div>Pending Merchant Applications: <strong style={{ color: '#fca5a5' }}>{stats?.pendingSellers || 0}</strong></div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+  </script>
+</body>
+</html>
