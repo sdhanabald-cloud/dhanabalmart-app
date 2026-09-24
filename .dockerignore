@@ -2,12 +2,8 @@
 .gitignore
 .env
 .env.*
-node_modules
 target
-dist
-build
-npm-debug.log
-README.md
-*.md
+backend/target
 .idea
 .vscode
+README.md

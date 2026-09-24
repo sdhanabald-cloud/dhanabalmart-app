@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head(${product.name})}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container" style="max-width: 1060px;">
+      
+      <div style="margin-bottom: 1.5rem;">
+        <a th:href="@{/products}" class="btn btn-outline-pink btn-sm">&larr; Back to Catalog</a>
+      </div>
+
+      <div class="dm-card" style="padding: 2.5rem;">
+        <div class="grid grid-cols-2" style="align-items: start; gap: 3rem;">
+          
+          <!-- IMAGE COLUMN -->
+          <div style="background-color: var(--color-peacock-dark); border: var(--gold-border); border-radius: var(--radius); overflow: hidden; height: 380px; display: flex; align-items: center; justify-content: center;">
+            <img th:if="${product.imageUrl != null && !product.imageUrl.isEmpty()}" th:src="${product.imageUrl}" th:alt="${product.name}" style="width: 100%; height: 100%; object-fit: cover;">
+            <div th:unless="${product.imageUrl != null && !product.imageUrl.isEmpty()}" style="font-size: 5rem; color: var(--color-gold);">&#128717;</div>
+          </div>
+
+          <!-- DETAILS COLUMN -->
+          <div>
+            <span class="badge badge-gold" th:text="${product.category != null ? product.category.name : 'Exclusive'}">Category</span>
+            
+            <h1 style="font-size: 2.2rem; margin: 0.75rem 0; color: #FFFFFF;" th:text="${product.name}">Product Name</h1>
+            
+            <div style="display: flex; align-items: baseline; gap: 1rem; margin-bottom: 1.5rem;">
+              <span class="gold-text" style="font-size: 2.2rem; font-family: var(--font-serif);" th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">$0.00</span>
+              
+              <span th:if="${product.stockQuantity > 0}" class="badge badge-olive">In Stock (<span th:text="${product.stockQuantity}">10</span> available)</span>
+              <span th:unless="${product.stockQuantity > 0}" class="badge badge-danger">Out of Stock</span>
+            </div>
+
+            <div style="background: rgba(3, 33, 33, 0.6); padding: 1.25rem; border-radius: 8px; border-left: 3px solid var(--color-gold); margin-bottom: 1.5rem;">
+              <h4 style="color: var(--color-light-pink); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.4rem;">Description</h4>
+              <p style="color: #cbd5e1; line-height: 1.7; font-size: 0.95rem;" th:text="${product.description}">Product description...</p>
+            </div>
+
+            <div style="margin-bottom: 1.5rem; font-size: 0.88rem; color: #cbd5e1;">
+              <p style="margin-bottom: 0.3rem;">Merchant: <strong style="color: #FFFFFF;" th:text="${product.seller != null ? product.seller.storeName : 'Verified Merchant'}">Store</strong></p>
+              <p th:if="${product.seller != null && product.seller.businessAddress != null}">Location: <span th:text="${product.seller.businessAddress}">Address</span></p>
+            </div>
+
+            <!-- ADD TO CART ACTION -->
+            <form th:action="@{/cart/add}" method="POST" style="display: flex; gap: 1rem; align-items: center;">
+              <input type="hidden" name="productId" th:value="${product.id}">
+              <div style="width: 100px;">
+                <input type="number" name="quantity" value="1" min="1" th:max="${product.stockQuantity}" class="form-input" th:disabled="${product.stockQuantity <= 0}" style="text-align: center;">
+              </div>
+              <button type="submit" class="btn btn-gold btn-lg" style="flex: 1;" th:disabled="${product.stockQuantity <= 0}">
+                &#128722; Add to Shopping Cart
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

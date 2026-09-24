@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Seller Center Dashboard')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header">
+        <div>
+          <span class="badge badge-brown" style="margin-bottom: 0.5rem;">Merchant Center</span>
+          <h1 class="page-title">Storefront <span class="gold-text" th:text="${seller != null ? seller.storeName : 'Merchant Dashboard'}">Store</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.95rem;">
+            Approval Status: 
+            <span class="badge badge-olive" th:text="${seller != null ? seller.approvalStatus : 'APPROVED'}">APPROVED</span>
+          </p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+          <a th:href="@{/seller/products/new}" class="btn btn-gold btn-sm">+ Add New Product</a>
+          <a th:href="@{/seller/orders}" class="btn btn-outline btn-sm">Order Fulfillment</a>
+        </div>
+      </div>
+
+      <!-- METRIC CARDS -->
+      <div class="grid grid-cols-4" style="margin-bottom: 2rem;">
+        <div class="stat-card">
+          <span class="stat-value gold-text" th:text="'$' + ${#numbers.formatDecimal(totalSales, 1, 2)}">$0.00</span>
+          <span class="stat-label">Gross Merchant Revenue</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" style="color: #60a5fa;" th:text="${productsCount}">0</span>
+          <span class="stat-label">Active Listed Products</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" style="color: #4ade80;" th:text="${ordersCount}">0</span>
+          <span class="stat-label">Items Sold</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" th:style="${lowStockCount > 0 ? 'color: #f87171;' : 'color: #cbd5e1;'}" th:text="${lowStockCount}">0</span>
+          <span class="stat-label">Low Stock Alerts (&le; 5)</span>
+        </div>
+      </div>
+
+      <!-- RECENT SALES / FULFILLMENT -->
+      <div class="dm-card" style="margin-bottom: 2rem;">
+        <div class="page-header" style="margin-bottom: 1.25rem;">
+          <h2 style="font-size: 1.25rem; color: #FFF;">Recent Customer Orders</h2>
+          <a th:href="@{/seller/orders}" class="btn btn-outline-pink btn-sm">All Merchant Orders &rarr;</a>
+        </div>
+
+        <div th:if="${recentItems != null && !recentItems.isEmpty()}" class="table-responsive">
+          <table class="dm-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Product</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Subtotal</th>
+                <th>Order Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="item : ${recentItems}">
+                <td><strong th:text="${item.order != null ? item.order.orderNumber : 'N/A'}">DBM-123</strong></td>
+                <td style="color: #FFF;" th:text="${item.product != null ? item.product.name : 'Product'}">Product</td>
+                <td th:text="${item.quantity}">1</td>
+                <td th:text="'$' + ${#numbers.formatDecimal(item.unitPrice, 1, 2)}">$0.00</td>
+                <td style="color: var(--color-gold); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(item.totalPrice, 1, 2)}">$0.00</td>
+                <td>
+                  <span class="badge badge-gold" th:text="${item.order != null ? item.order.orderStatus : 'PENDING'}">PENDING</span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div th:unless="${recentItems != null && !recentItems.isEmpty()}" style="text-align: center; padding: 2.5rem 1rem;">
+          <p style="color: var(--color-light-pink); margin-bottom: 1rem;">No orders recorded yet.</p>
+          <a th:href="@{/seller/products/new}" class="btn btn-gold btn-sm">List Your First Product</a>
+        </div>
+      </div>
+
+      <!-- QUICK SELLER NAVIGATION CARDS -->
+      <div class="grid grid-cols-3">
+        <div class="dm-card" style="background: var(--color-peacock-dark);">
+          <h3 style="color: var(--color-gold); font-size: 1.1rem; margin-bottom: 0.5rem;">Catalog Inventory</h3>
+          <p style="color: #cbd5e1; font-size: 0.85rem; margin-bottom: 1rem;">Manage stock quantities, descriptions, and pricing models.</p>
+          <a th:href="@{/seller/products}" class="btn btn-brown btn-sm">Manage Products &rarr;</a>
+        </div>
+
+        <div class="dm-card" style="background: var(--color-peacock-dark);">
+          <h3 style="color: var(--color-gold); font-size: 1.1rem; margin-bottom: 0.5rem;">Shipment Operations</h3>
+          <p style="color: #cbd5e1; font-size: 0.85rem; margin-bottom: 1rem;">Update order states from PROCESSING to SHIPPED and DELIVERED.</p>
+          <a th:href="@{/seller/orders}" class="btn btn-brown btn-sm">View Shipments &rarr;</a>
+        </div>
+
+        <div class="dm-card" style="background: var(--color-peacock-dark);">
+          <h3 style="color: var(--color-gold); font-size: 1.1rem; margin-bottom: 0.5rem;">Store Profile</h3>
+          <p style="color: #cbd5e1; font-size: 0.85rem; margin-bottom: 1rem;">Edit commercial addresses, store descriptions, and tax numbers.</p>
+          <a th:href="@{/seller/profile}" class="btn btn-brown btn-sm">Store Settings &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Buyer Dashboard')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header">
+        <div>
+          <span class="badge badge-pink" style="margin-bottom: 0.5rem;">Shopper Portal</span>
+          <h1 class="page-title">Welcome back, <span class="gold-text" th:text="${user != null ? user.fullName : 'Valued Buyer'}">Buyer</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.95rem;">Manage your orders, active shopping cart, and account profile</p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+          <a th:href="@{/products}" class="btn btn-gold btn-sm">Explore Catalog</a>
+          <a th:href="@{/cart}" class="btn btn-outline btn-sm">&#128722; View Cart</a>
+        </div>
+      </div>
+
+      <!-- STATS OVERVIEW -->
+      <div class="grid grid-cols-3" style="margin-bottom: 2rem;">
+        <div class="stat-card">
+          <span class="stat-value gold-text" th:text="${totalOrders}">0</span>
+          <span class="stat-label">Total Orders Placed</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" style="color: var(--color-light-pink);" th:text="${cartItemCount}">0</span>
+          <span class="stat-label">Items in Active Cart</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" style="color: #4ade80;">Active</span>
+          <span class="stat-label">Account Standing</span>
+        </div>
+      </div>
+
+      <!-- RECENT ORDERS -->
+      <div class="dm-card" style="margin-bottom: 2rem;">
+        <div class="page-header" style="margin-bottom: 1.25rem;">
+          <h2 style="font-size: 1.25rem; color: #FFFFFF;">Recent Orders</h2>
+          <a th:href="@{/buyer/orders}" class="btn btn-outline-pink btn-sm">View All Orders &rarr;</a>
+        </div>
+
+        <div th:if="${recentOrders != null && !recentOrders.isEmpty()}" class="table-responsive">
+          <table class="dm-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="order : ${recentOrders}">
+                <td><strong th:text="${order.orderNumber}">DBM-123</strong></td>
+                <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">Date</td>
+                <td style="color: var(--color-gold); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">$0.00</td>
+                <td>
+                  <span th:if="${order.orderStatus == 'PENDING'}" class="badge badge-gold">Pending</span>
+                  <span th:if="${order.orderStatus == 'PROCESSING'}" class="badge badge-brown">Processing</span>
+                  <span th:if="${order.orderStatus == 'SHIPPED'}" class="badge badge-pink">Shipped</span>
+                  <span th:if="${order.orderStatus == 'DELIVERED'}" class="badge badge-olive">Delivered</span>
+                  <span th:if="${order.orderStatus == 'CANCELLED'}" class="badge badge-danger">Cancelled</span>
+                </td>
+                <td>
+                  <a th:href="@{'/buyer/orders/' + ${order.id}}" class="btn btn-outline btn-sm">Details</a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div th:unless="${recentOrders != null && !recentOrders.isEmpty()}" style="text-align: center; padding: 2.5rem 1rem;">
+          <p style="color: var(--color-light-pink); margin-bottom: 1rem;">You have not placed any orders yet.</p>
+          <a th:href="@{/products}" class="btn btn-gold btn-sm">Start Shopping</a>
+        </div>
+      </div>
+
+      <!-- QUICK PROFILE SNAPSHOT -->
+      <div class="dm-card" style="background: var(--color-peacock-dark);">
+        <h3 style="color: var(--color-gold); font-size: 1.15rem; margin-bottom: 1rem;">Shipping Destination</h3>
+        <p style="color: #cbd5e1; font-size: 0.92rem; margin-bottom: 0.5rem;">
+          Address: <strong th:text="${buyer != null && buyer.shippingAddress != null ? buyer.shippingAddress : 'No default address saved.'}">Address</strong>
+        </p>
+        <p style="color: #cbd5e1; font-size: 0.92rem; margin-bottom: 1rem;">
+          City / Postal: <span th:text="${(buyer != null && buyer.city != null ? buyer.city : '') + ' ' + (buyer != null && buyer.postalCode != null ? buyer.postalCode : '')}">City</span>
+        </p>
+        <a th:href="@{/buyer/profile}" class="btn btn-outline-pink btn-sm">Update Profile</a>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

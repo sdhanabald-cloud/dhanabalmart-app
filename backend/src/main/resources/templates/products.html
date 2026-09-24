@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Marketplace Catalog')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Marketplace <span class="gold-text">Catalog</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.95rem;">
+            Showing <strong th:text="${totalCount}">0</strong> premium listings
+          </p>
+        </div>
+
+        <!-- SEARCH & FILTER FORM -->
+        <form th:action="@{/products}" method="GET" style="display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+          <select name="category" class="form-select" style="width: auto; min-width: 170px;" onchange="this.form.submit()">
+            <option value="">All Categories</option>
+            <option th:each="cat : ${categories}"
+                    th:value="${cat.id}"
+                    th:text="${cat.name}"
+                    th:selected="${selectedCategory != null && selectedCategory == cat.id}">
+              Category
+            </option>
+          </select>
+
+          <input type="text" name="search" th:value="${searchTerm}" placeholder="Search products..." class="form-input" style="width: 220px;">
+          <button type="submit" class="btn btn-gold btn-sm">Filter</button>
+          <a th:if="${(selectedCategory != null) || (searchTerm != null && !searchTerm.isEmpty())}" th:href="@{/products}" class="btn btn-outline-pink btn-sm">Clear</a>
+        </form>
+      </div>
+
+      <!-- PRODUCT GRID -->
+      <div th:if="${products != null && !products.isEmpty()}" class="product-grid">
+        <div th:each="product : ${products}" class="product-card">
+          <div class="img-wrap">
+            <img th:if="${product.imageUrl != null && !product.imageUrl.isEmpty()}" th:src="${product.imageUrl}" th:alt="${product.name}">
+            <div th:unless="${product.imageUrl != null && !product.imageUrl.isEmpty()}" style="font-size: 3.5rem; color: var(--color-gold);">&#128717;</div>
+          </div>
+          <div class="content">
+            <div class="category-tag" th:text="${product.category != null ? product.category.name : 'Exclusive'}">Category</div>
+            <h3 class="title" th:text="${product.name}">Product Name</h3>
+            <p class="desc" th:text="${product.description}">Product description...</p>
+            
+            <div style="font-size: 0.8rem; color: var(--color-light-pink); margin-bottom: 0.6rem;">
+              Seller: <strong th:text="${product.seller != null ? product.seller.storeName : 'Verified Merchant'}">Store</strong>
+              &bull; Stock: <span th:text="${product.stockQuantity}">10</span>
+            </div>
+
+            <div class="bottom-bar">
+              <span class="price" th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">$0.00</span>
+              <div style="display: flex; gap: 0.4rem;">
+                <a th:href="@{'/products/' + ${product.id}}" class="btn btn-outline btn-sm">Details</a>
+                <form th:if="${userRole == 'ROLE_BUYER' || !isLoggedIn}" th:action="@{/cart/add}" method="POST" style="display: inline;">
+                  <input type="hidden" name="productId" th:value="${product.id}">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="btn btn-brown btn-sm" th:disabled="${product.stockQuantity <= 0}" th:title="${product.stockQuantity <= 0 ? 'Out of stock' : 'Add to cart'}">
+                    &#128722; Add
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- NO PRODUCTS EMPTY STATE -->
+      <div th:unless="${products != null && !products.isEmpty()}" class="dm-card" style="text-align: center; padding: 4rem 2rem;">
+        <div style="font-size: 3.5rem; margin-bottom: 1rem; color: var(--color-gold);">&#128269;</div>
+        <h2 style="font-size: 1.5rem; margin-bottom: 0.5rem;">No Products Found</h2>
+        <p style="color: var(--color-light-pink); margin-bottom: 1.5rem;">
+          No items match your filter criteria. Try adjusting your search keywords or browsing all categories.
+        </p>
+        <a th:href="@{/products}" class="btn btn-gold">Reset Filters</a>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

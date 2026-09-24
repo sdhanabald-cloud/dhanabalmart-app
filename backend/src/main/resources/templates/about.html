@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('About Us')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container" style="max-width: 900px;">
+      
+      <div class="page-header" style="text-align: center; display: block; margin-bottom: 2.5rem;">
+        <span class="badge badge-gold" style="margin-bottom: 0.75rem;">Platform Architecture</span>
+        <h1 class="page-title">About <span class="gold-text">DhanabalMart</span></h1>
+        <p style="color: var(--color-light-pink); font-size: 1.1rem; margin-top: 0.5rem;">
+          Enterprise multi-vendor e-commerce marketplace powered by 100% Pure Java.
+        </p>
+      </div>
+
+      <div class="dm-card" style="margin-bottom: 2rem;">
+        <h2 style="color: var(--color-gold); font-size: 1.4rem; margin-bottom: 1rem;">Project Vision & Core Principles</h2>
+        <p style="color: #e2e8f0; margin-bottom: 1rem; line-height: 1.7;">
+          <strong>DhanabalMart</strong> is a production-grade full-stack e-commerce marketplace designed with an emphasis on rock-solid architectural integrity, transactional consistency, and enterprise durability. Built entirely on standard Java enterprise primitives, the application delivers optimal performance, clean maintainability, and effortless deployment to modern cloud infrastructure.
+        </p>
+        <p style="color: #cbd5e1; line-height: 1.7;">
+          Unlike fragmented heterogeneous application stacks, DhanabalMart unifies authentication, authorization, business domain logic, and presentation within an elegant, typed, server-rendered Java ecosystem with zero JavaScript overhead.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-2" style="margin-bottom: 2rem;">
+        <div class="dm-card">
+          <h3 style="color: var(--color-gold); margin-bottom: 0.75rem;">Technology Stack</h3>
+          <ul style="list-style-type: square; padding-left: 1.25rem; color: #cbd5e1; line-height: 1.8;">
+            <li><strong>Runtime:</strong> Java 17 LTS (Eclipse Temurin)</li>
+            <li><strong>Framework:</strong> Spring Boot 3.2.5</li>
+            <li><strong>UI Layer:</strong> Thymeleaf 3 + Pure CSS</li>
+            <li><strong>Security:</strong> Spring Security 6 (BCrypt, Session + JWT)</li>
+            <li><strong>Persistence:</strong> Spring Data JPA / Hibernate 6</li>
+            <li><strong>Database:</strong> Relational PostgreSQL (Render managed)</li>
+            <li><strong>Containerization:</strong> Multi-stage Docker build</li>
+          </ul>
+        </div>
+
+        <div class="dm-card">
+          <h3 style="color: var(--color-gold); margin-bottom: 0.75rem;">User Roles & Governance</h3>
+          <ul style="list-style-type: square; padding-left: 1.25rem; color: #cbd5e1; line-height: 1.8;">
+            <li><strong>Admin:</strong> Platform health oversight, seller approval workflow, user account governance, catalog moderation, and financial reporting.</li>
+            <li><strong>Seller:</strong> Store storefront management, inventory and pricing control, order tracking, and sales analytics.</li>
+            <li><strong>Buyer:</strong> Catalog discovery, full-text search, shopping cart management, seamless checkout, and personal order history.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="dm-card" style="text-align: center; background: var(--color-peacock-dark);">
+        <h3 style="color: var(--color-gold); margin-bottom: 0.75rem;">Ready to experience DhanabalMart?</h3>
+        <p style="color: var(--color-light-pink); margin-bottom: 1.5rem;">Access the marketplace or choose your dedicated role portal.</p>
+        <div style="display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+          <a th:href="@{/products}" class="btn btn-gold">Browse Catalog</a>
+          <a th:href="@{/login}" class="btn btn-outline">Role Portals</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

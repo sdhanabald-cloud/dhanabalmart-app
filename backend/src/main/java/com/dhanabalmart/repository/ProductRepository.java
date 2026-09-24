@@ -10,8 +10,12 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-    List<Product> findBySellerId(Long sellerId);
-    List<Product> findByCategoryId(Long categoryId);
+    @Query("SELECT p FROM Product p WHERE p.seller.id = :sellerId")
+    List<Product> findBySellerId(@Param("sellerId") Long sellerId);
+
+    @Query("SELECT p FROM Product p WHERE p.category.id = :categoryId")
+    List<Product> findByCategoryId(@Param("categoryId") Long categoryId);
+
     List<Product> findByStatus(String status);
 
     @Query("SELECT p FROM Product p WHERE p.status = 'ACTIVE' AND " +

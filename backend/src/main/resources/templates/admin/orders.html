@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Global Orders Ledger')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Global <span class="gold-text">Order Ledger</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.95rem;">Audit all marketplace sales transactions and fulfillment records</p>
+        </div>
+        <a th:href="@{/admin/dashboard}" class="btn btn-outline-pink btn-sm">&larr; Back to Dashboard</a>
+      </div>
+
+      <div class="dm-card">
+        <div th:if="${orders != null && !orders.isEmpty()}" class="table-responsive">
+          <table class="dm-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Placement Date</th>
+                <th>Buyer</th>
+                <th>Items Count</th>
+                <th>Total GMV</th>
+                <th>Fulfillment Status</th>
+                <th>Payment Channel</th>
+                <th>Txn Hash</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="order : ${orders}">
+                <td><strong style="color: var(--color-gold);" th:text="${order.orderNumber}">DBM-123</strong></td>
+                <td th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">Date</td>
+                <td>
+                  <span th:text="${order.buyer != null && order.buyer.user != null ? order.buyer.user.fullName : 'Customer'}">Name</span>
+                  <div style="font-size: 0.75rem; color: var(--color-light-pink);" th:text="${order.buyer != null && order.buyer.user != null ? order.buyer.user.email : ''}">email</div>
+                </td>
+                <td th:text="${order.items != null ? order.items.size() : 0}">0</td>
+                <td style="color: var(--color-gold); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">$0.00</td>
+                <td>
+                  <span th:if="${order.orderStatus == 'PENDING'}" class="badge badge-gold">Pending</span>
+                  <span th:if="${order.orderStatus == 'PROCESSING'}" class="badge badge-brown">Processing</span>
+                  <span th:if="${order.orderStatus == 'SHIPPED'}" class="badge badge-pink">Shipped</span>
+                  <span th:if="${order.orderStatus == 'DELIVERED'}" class="badge badge-olive">Delivered</span>
+                  <span th:if="${order.orderStatus == 'CANCELLED'}" class="badge badge-danger">Cancelled</span>
+                </td>
+                <td>
+                  <span class="badge badge-olive" th:text="${order.payment != null ? order.payment.paymentMethod : 'CARD'}">CARD</span>
+                </td>
+                <td style="font-family: monospace; font-size: 0.75rem; color: #cbd5e1; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" th:text="${order.payment != null ? order.payment.transactionId : 'N/A'}">TXN</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div th:unless="${orders != null && !orders.isEmpty()}" style="text-align: center; padding: 3rem 1rem;">
+          <p style="color: var(--color-light-pink);">No platform orders recorded yet.</p>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Shopping Cart')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Your Shopping <span class="gold-text">Cart</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.95rem;">Review selected luxury items before proceeding to checkout</p>
+        </div>
+        <a th:href="@{/products}" class="btn btn-outline-pink btn-sm">&larr; Continue Shopping</a>
+      </div>
+
+      <div th:if="${successMessage != null}" class="alert alert-success">
+        <span th:text="${successMessage}">Success message</span>
+      </div>
+      <div th:if="${errorMessage != null}" class="alert alert-danger">
+        <span th:text="${errorMessage}">Error message</span>
+      </div>
+
+      <div th:if="${cart != null && cart.items != null && !cart.items.isEmpty()}" class="grid" style="grid-template-columns: 2fr 1fr; align-items: start;">
+        
+        <!-- CART ITEMS TABLE -->
+        <div class="dm-card">
+          <div class="table-responsive">
+            <table class="dm-table">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Price</th>
+                  <th>Quantity</th>
+                  <th>Subtotal</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr th:each="item : ${cart.items}">
+                  <td>
+                    <div style="display: flex; align-items: center; gap: 0.75rem;">
+                      <img th:if="${item.product.imageUrl != null && !item.product.imageUrl.isEmpty()}" th:src="${item.product.imageUrl}" alt="" style="width: 50px; height: 50px; object-fit: cover; border-radius: 6px;">
+                      <div>
+                        <strong style="color: #FFF; display: block;" th:text="${item.product.name}">Product Name</strong>
+                        <span style="font-size: 0.78rem; color: var(--color-light-pink);" th:text="${item.product.seller != null ? item.product.seller.storeName : ''}">Seller</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td th:text="'$' + ${#numbers.formatDecimal(item.priceAtAddition, 1, 2)}">$0.00</td>
+                  <td>
+                    <!-- UPDATE QUANTITY FORM -->
+                    <form th:action="@{/cart/update}" method="POST" style="display: flex; align-items: center; gap: 0.4rem;">
+                      <input type="hidden" name="itemId" th:value="${item.id}">
+                      <input type="number" name="quantity" th:value="${item.quantity}" min="1" th:max="${item.product.stockQuantity}" class="form-input" style="width: 65px; padding: 0.35rem; text-align: center;">
+                      <button type="submit" class="btn btn-outline btn-sm" title="Update Quantity">&#10003;</button>
+                    </form>
+                  </td>
+                  <td style="color: var(--color-gold); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(item.priceAtAddition * item.quantity, 1, 2)}">$0.00</td>
+                  <td>
+                    <!-- REMOVE ITEM FORM -->
+                    <form th:action="@{/cart/remove}" method="POST">
+                      <input type="hidden" name="itemId" th:value="${item.id}">
+                      <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Remove item from cart?')">&times;</button>
+                    </form>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ORDER SUMMARY CARD -->
+        <div class="dm-card" style="background: var(--color-peacock-dark);">
+          <h2 style="font-size: 1.3rem; color: #FFF; margin-bottom: 1.25rem;">Order Summary</h2>
+          
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: #cbd5e1;">
+            <span>Subtotal</span>
+            <span th:text="'$' + ${#numbers.formatDecimal(cartTotal, 1, 2)}">$0.00</span>
+          </div>
+
+          <div style="display: flex; justify-content: space-between; margin-bottom: 0.75rem; color: #cbd5e1;">
+            <span>Estimated Shipping</span>
+            <span style="color: #4ade80;">Complimentary</span>
+          </div>
+
+          <div style="border-top: 1px solid rgba(212,175,55,0.3); padding-top: 1rem; margin-top: 1rem; display: flex; justify-content: space-between; align-items: baseline;">
+            <span style="font-size: 1.1rem; font-weight: 700;">Total</span>
+            <span class="gold-text" style="font-size: 1.6rem; font-family: var(--font-serif);" th:text="'$' + ${#numbers.formatDecimal(cartTotal, 1, 2)}">$0.00</span>
+          </div>
+
+          <a th:href="@{/checkout}" class="btn btn-gold btn-lg" style="width: 100%; margin-top: 1.5rem;">
+            Proceed To Checkout &rarr;
+          </a>
+
+          <div style="margin-top: 1rem; text-align: center; color: var(--color-light-pink); font-size: 0.8rem;">
+            <span>&#128274; 256-Bit Encrypted Secure Checkout</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- EMPTY CART STATE -->
+      <div th:unless="${cart != null && cart.items != null && !cart.items.isEmpty()}" class="dm-card" style="text-align: center; padding: 4rem 2rem;">
+        <div style="font-size: 3.5rem; margin-bottom: 1rem; color: var(--color-gold);">&#128722;</div>
+        <h2 style="font-size: 1.6rem; margin-bottom: 0.5rem;">Your Cart is Empty</h2>
+        <p style="color: var(--color-light-pink); margin-bottom: 1.5rem;">
+          Explore our exclusive catalog of artisanal luxury products and add items to your cart.
+        </p>
+        <a th:href="@{/products}" class="btn btn-gold">Browse Marketplace</a>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

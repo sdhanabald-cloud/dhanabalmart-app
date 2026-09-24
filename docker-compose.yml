@@ -29,7 +29,7 @@ services:
       - "8080:8080"
     environment:
       PORT: 8080
-      NODE_ENV: production
+      SPRING_PROFILES_ACTIVE: prod
       DATABASE_URL: postgresql://dhanabal_user:dhanabal_secure_password@postgres:5432/dhanabalmart
       JWT_SECRET: DhanabalMartSuperSecretKey2026WithSufficientBitsForHMACSHA256Encryption!
     depends_on:

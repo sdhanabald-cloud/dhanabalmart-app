@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Order Details')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container" style="max-width: 960px;">
+      
+      <div style="margin-bottom: 1.5rem; display: flex; justify-content: space-between; align-items: center;">
+        <a th:href="@{/buyer/orders}" class="btn btn-outline-pink btn-sm">&larr; Back to Order History</a>
+        <a th:href="@{/products}" class="btn btn-gold btn-sm">Continue Shopping</a>
+      </div>
+
+      <div th:if="${successMessage != null}" class="alert alert-success">
+        <span th:text="${successMessage}">Order confirmed!</span>
+      </div>
+
+      <div class="dm-card" style="margin-bottom: 2rem;">
+        <div class="page-header" style="border-bottom: 1px solid rgba(212,175,55,0.3); padding-bottom: 1.25rem; margin-bottom: 1.5rem;">
+          <div>
+            <span style="font-size: 0.85rem; color: var(--color-light-pink); text-transform: uppercase;">Purchase Receipt</span>
+            <h1 style="font-size: 1.7rem; color: #FFF; margin-top: 0.25rem;">
+              Order <span class="gold-text" th:text="${order.orderNumber}">DBM-12345</span>
+            </h1>
+            <p style="color: #94a3b8; font-size: 0.85rem; margin-top: 0.2rem;" th:text="'Placed on ' + ${#temporals.format(order.createdAt, 'MMMM dd, yyyy HH:mm')}">Date</p>
+          </div>
+
+          <div style="text-align: right;">
+            <div style="margin-bottom: 0.4rem;">
+              <span th:if="${order.orderStatus == 'PENDING'}" class="badge badge-gold">Pending Fulfillment</span>
+              <span th:if="${order.orderStatus == 'PROCESSING'}" class="badge badge-brown">Processing</span>
+              <span th:if="${order.orderStatus == 'SHIPPED'}" class="badge badge-pink">Shipped</span>
+              <span th:if="${order.orderStatus == 'DELIVERED'}" class="badge badge-olive">Delivered</span>
+              <span th:if="${order.orderStatus == 'CANCELLED'}" class="badge badge-danger">Cancelled</span>
+            </div>
+            <div style="font-size: 0.85rem; color: var(--color-light-pink);" th:if="${order.payment != null}">
+              Paid via <strong style="color: #FFF;" th:text="${order.payment.paymentMethod}">CARD</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- ITEMS BREAKDOWN -->
+        <h3 style="color: var(--color-gold); font-size: 1.15rem; margin-bottom: 1rem;">Items In Consignment</h3>
+        <div class="table-responsive" style="margin-bottom: 1.5rem;">
+          <table class="dm-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Merchant</th>
+                <th>Unit Price</th>
+                <th>Quantity</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="item : ${order.items}">
+                <td>
+                  <strong style="color: #FFF;" th:text="${item.product != null ? item.product.name : 'Exclusive Product'}">Product</strong>
+                </td>
+                <td style="color: var(--color-light-pink); font-size: 0.85rem;" th:text="${item.seller != null ? item.seller.storeName : 'Merchant'}">Seller</td>
+                <td th:text="'$' + ${#numbers.formatDecimal(item.unitPrice, 1, 2)}">$0.00</td>
+                <td th:text="${item.quantity}">1</td>
+                <td style="color: var(--color-gold); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(item.totalPrice, 1, 2)}">$0.00</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- ADDRESS & BILLING SUMMARY -->
+        <div class="grid grid-cols-2" style="background: var(--color-peacock-dark); padding: 1.5rem; border-radius: 8px;">
+          <div>
+            <h4 style="color: var(--color-light-pink); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.5rem;">Shipping Address</h4>
+            <p style="color: #FFFFFF; font-size: 0.95rem; line-height: 1.6;" th:text="${order.shippingAddress}">Address coordinates...</p>
+            <p style="color: #94a3b8; font-size: 0.82rem; margin-top: 0.5rem;" th:if="${order.buyer != null && order.buyer.user != null}">
+              Recipient: <span th:text="${order.buyer.user.fullName}">Name</span> (<span th:text="${order.buyer.user.phone}">Phone</span>)
+            </p>
+          </div>
+
+          <div style="border-left: 1px solid rgba(232,201,207,0.15); padding-left: 1.5rem;">
+            <h4 style="color: var(--color-light-pink); font-size: 0.85rem; text-transform: uppercase; margin-bottom: 0.5rem;">Financial Breakdown</h4>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem; color: #cbd5e1; font-size: 0.9rem;">
+              <span>Subtotal:</span>
+              <span th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">$0.00</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem; color: #cbd5e1; font-size: 0.9rem;">
+              <span>White Glove Logistics:</span>
+              <span style="color: #4ade80;">$0.00 (Included)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid rgba(212,175,55,0.3); font-weight: 800; font-size: 1.1rem;">
+              <span>Total Settled:</span>
+              <span class="gold-text" th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">$0.00</span>
+            </div>
+            <div th:if="${order.payment != null}" style="font-size: 0.75rem; color: #94a3b8; margin-top: 0.5rem; word-break: break-all;">
+              Txn ID: <code th:text="${order.payment.transactionId}">TXN-UUID</code>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

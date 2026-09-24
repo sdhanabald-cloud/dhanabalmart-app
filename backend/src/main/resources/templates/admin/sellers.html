@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Manage Sellers')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Seller <span class="gold-text">Governance</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.95rem;">Review merchant applications, approve catalog privileges, and enforce standards</p>
+        </div>
+        <a th:href="@{/admin/dashboard}" class="btn btn-outline-pink btn-sm">&larr; Back to Dashboard</a>
+      </div>
+
+      <div th:if="${successMessage != null}" class="alert alert-success">
+        <span th:text="${successMessage}">Success!</span>
+      </div>
+      <div th:if="${errorMessage != null}" class="alert alert-danger">
+        <span th:text="${errorMessage}">Error!</span>
+      </div>
+
+      <div class="dm-card">
+        <div class="table-responsive">
+          <table class="dm-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Store / Brand</th>
+                <th>Owner Details</th>
+                <th>Tax ID</th>
+                <th>Headquarters</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="seller : ${sellers}">
+                <td th:text="${seller.id}">1</td>
+                <td>
+                  <strong style="color: #FFF; font-size: 0.95rem;" th:text="${seller.storeName}">Store Name</strong>
+                </td>
+                <td>
+                  <div th:if="${seller.user != null}">
+                    <span th:text="${seller.user.fullName}">Owner</span>
+                    <div style="font-size: 0.78rem; color: var(--color-light-pink);" th:text="${seller.user.email}">email</div>
+                    <div style="font-size: 0.78rem; color: #cbd5e1;" th:text="${seller.user.phone}">phone</div>
+                  </div>
+                </td>
+                <td style="font-family: monospace; font-size: 0.85rem;" th:text="${seller.taxId != null ? seller.taxId : 'N/A'}">TAX-123</td>
+                <td style="font-size: 0.82rem; color: #cbd5e1; max-width: 200px;" th:text="${seller.businessAddress != null ? seller.businessAddress : 'N/A'}">Address</td>
+                <td>
+                  <span th:if="${seller.approvalStatus == 'APPROVED'}" class="badge badge-olive">APPROVED</span>
+                  <span th:if="${seller.approvalStatus == 'PENDING'}" class="badge badge-gold">PENDING</span>
+                  <span th:if="${seller.approvalStatus == 'REJECTED'}" class="badge badge-danger">REJECTED</span>
+                </td>
+                <td>
+                  <div style="display: flex; gap: 0.4rem;">
+                    <form th:if="${seller.approvalStatus != 'APPROVED'}" th:action="@{'/admin/sellers/' + ${seller.id} + '/status'}" method="POST">
+                      <input type="hidden" name="status" value="APPROVED">
+                      <button type="submit" class="btn btn-gold btn-sm">Approve</button>
+                    </form>
+                    <form th:if="${seller.approvalStatus != 'REJECTED'}" th:action="@{'/admin/sellers/' + ${seller.id} + '/status'}" method="POST">
+                      <input type="hidden" name="status" value="REJECTED">
+                      <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

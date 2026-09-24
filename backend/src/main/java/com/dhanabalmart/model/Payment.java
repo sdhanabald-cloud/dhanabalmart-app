@@ -62,6 +62,8 @@ public class Payment {
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
+    public String getPaymentStatus() { return status; }
+
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

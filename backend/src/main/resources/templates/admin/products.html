@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Catalog Moderation')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Catalog <span class="gold-text">Moderation</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.95rem;">Audit all merchant product listings across all departments</p>
+        </div>
+        <a th:href="@{/admin/dashboard}" class="btn btn-outline-pink btn-sm">&larr; Back to Dashboard</a>
+      </div>
+
+      <div th:if="${successMessage != null}" class="alert alert-success">
+        <span th:text="${successMessage}">Success!</span>
+      </div>
+      <div th:if="${errorMessage != null}" class="alert alert-danger">
+        <span th:text="${errorMessage}">Error!</span>
+      </div>
+
+      <div class="dm-card">
+        <div class="table-responsive">
+          <table class="dm-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Merchant</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="prod : ${products}">
+                <td>
+                  <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <img th:if="${prod.imageUrl != null && !prod.imageUrl.isEmpty()}" th:src="${prod.imageUrl}" alt="" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;">
+                    <div>
+                      <strong style="color: #FFF;" th:text="${prod.name}">Product</strong>
+                      <div style="font-size: 0.78rem; color: #cbd5e1; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" th:text="${prod.description}">Description</div>
+                    </div>
+                  </div>
+                </td>
+                <td style="color: var(--color-gold);" th:text="${prod.seller != null ? prod.seller.storeName : 'Merchant'}">Merchant</td>
+                <td th:text="${prod.category != null ? prod.category.name : 'Category'}">Category</td>
+                <td style="color: var(--color-gold); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(prod.price, 1, 2)}">$0.00</td>
+                <td th:text="${prod.stockQuantity}">10</td>
+                <td>
+                  <span class="badge badge-olive" th:text="${prod.status}">ACTIVE</span>
+                </td>
+                <td>
+                  <form th:action="@{'/admin/products/delete/' + ${prod.id}}" method="POST" onsubmit="return confirm('Moderator action: Delete this product listing?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Remove Listing</button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

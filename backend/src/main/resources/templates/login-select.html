@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Access Portals')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container" style="max-width: 1080px;">
+      
+      <div class="page-header" style="text-align: center; display: block; margin-bottom: 2.5rem;">
+        <span class="badge badge-gold" style="margin-bottom: 0.75rem;">Authentication Gateway</span>
+        <h1 class="page-title">Select Your <span class="gold-text">DhanabalMart Portal</span></h1>
+        <p style="color: var(--color-light-pink); font-size: 1.05rem; margin-top: 0.5rem;">
+          Choose your dedicated role portal to access specialized tools and dashboard features.
+        </p>
+      </div>
+
+      <div th:if="${message != null}" class="alert alert-success" style="max-width: 600px; margin: 0 auto 2rem auto;">
+        <span th:text="${message}">Message</span>
+      </div>
+
+      <div class="grid grid-cols-3">
+        
+        <!-- BUYER PORTAL -->
+        <div class="role-card">
+          <div>
+            <div class="role-icon">&#128717;</div>
+            <h2 style="font-size: 1.4rem; color: #FFFFFF; margin-bottom: 0.5rem;">Buyer Portal</h2>
+            <p style="color: #cbd5e1; font-size: 0.88rem; margin-bottom: 1.5rem;">
+              Shop curated luxury goods, manage your shopping cart, and track order shipments.
+            </p>
+          </div>
+          <div>
+            <a th:href="@{/login/buyer}" class="btn btn-gold" style="width: 100%; margin-bottom: 0.75rem;">Buyer Sign In</a>
+            <a th:href="@{/register/buyer}" class="btn btn-outline-pink btn-sm" style="width: 100%;">Create Buyer Account</a>
+          </div>
+        </div>
+
+        <!-- SELLER CENTER -->
+        <div class="role-card">
+          <div>
+            <div class="role-icon">&#127978;</div>
+            <h2 style="font-size: 1.4rem; color: #FFFFFF; margin-bottom: 0.5rem;">Seller Center</h2>
+            <p style="color: #cbd5e1; font-size: 0.88rem; margin-bottom: 1.5rem;">
+              List products, manage inventory and pricing, track customer orders, and view sales.
+            </p>
+          </div>
+          <div>
+            <a th:href="@{/login/seller}" class="btn btn-brown" style="width: 100%; margin-bottom: 0.75rem;">Seller Sign In</a>
+            <a th:href="@{/register/seller}" class="btn btn-outline-pink btn-sm" style="width: 100%;">Register Store</a>
+          </div>
+        </div>
+
+        <!-- ADMIN TERMINAL -->
+        <div class="role-card">
+          <div>
+            <div class="role-icon">&#128081;</div>
+            <h2 style="font-size: 1.4rem; color: #FFFFFF; margin-bottom: 0.5rem;">Admin Terminal</h2>
+            <p style="color: #cbd5e1; font-size: 0.88rem; margin-bottom: 1.5rem;">
+              Govern marketplace operations, approve seller stores, moderate catalog, and view financials.
+            </p>
+          </div>
+          <div>
+            <a th:href="@{/login/admin}" class="btn btn-outline" style="width: 100%; margin-bottom: 0.75rem;">Admin Sign In</a>
+            <div style="font-size: 0.78rem; color: var(--color-light-pink); text-align: center; margin-top: 0.4rem;">
+              Restricted to authorized system operators
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- PRE-SEEDED CREDENTIALS REFERENCE BOX -->
+      <div class="dm-card" style="margin-top: 3rem; background: var(--color-peacock-dark);">
+        <h3 style="color: var(--color-gold); font-size: 1.15rem; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span>&#128273;</span> Demonstration & Testing Credentials
+        </h3>
+        <div class="table-responsive">
+          <table class="dm-table">
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>Login Link</th>
+                <th>Email Address</th>
+                <th>Password</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge badge-gold">Admin</span></td>
+                <td><a th:href="@{/login/admin}">/login/admin</a></td>
+                <td><code>admin@dhanabalmart.com</code></td>
+                <td><code>Admin@123</code></td>
+                <td><span class="badge badge-olive">ACTIVE</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-brown">Seller</span></td>
+                <td><a th:href="@{/login/seller}">/login/seller</a></td>
+                <td><code>seller1@dhanabalmart.com</code></td>
+                <td><code>Seller@123</code></td>
+                <td><span class="badge badge-olive">APPROVED</span></td>
+              </tr>
+              <tr>
+                <td><span class="badge badge-pink">Buyer</span></td>
+                <td><a th:href="@{/login/buyer}">/login/buyer</a></td>
+                <td><code>buyer1@gmail.com</code></td>
+                <td><code>Buyer@123</code></td>
+                <td><span class="badge badge-olive">ACTIVE</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

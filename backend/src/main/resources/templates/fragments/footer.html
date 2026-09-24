@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <footer th:fragment="footer" class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-col">
+          <h3 class="gold-text" style="font-size: 1.3rem; margin-bottom: 0.75rem;">DhanabalMart</h3>
+          <p style="color: #cbd5e1; font-size: 0.88rem; line-height: 1.6;">
+            A premier multi-vendor e-commerce marketplace powered by a high-performance 100% Pure Java stack, relational PostgreSQL persistence, and enterprise security.
+          </p>
+        </div>
+
+        <div class="footer-col">
+          <h4>Marketplace</h4>
+          <ul>
+            <li><a th:href="@{/}">Home</a></li>
+            <li><a th:href="@{/products}">Browse Catalog</a></li>
+            <li><a th:href="@{/about}">About Platform</a></li>
+            <li><a th:href="@{/cart}">Shopping Cart</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Portals</h4>
+          <ul>
+            <li><a th:href="@{/login/buyer}">Buyer Sign In</a></li>
+            <li><a th:href="@{/register/buyer}">Buyer Registration</a></li>
+            <li><a th:href="@{/login/seller}">Seller Portal</a></li>
+            <li><a th:href="@{/register/seller}">Become a Seller</a></li>
+            <li><a th:href="@{/login/admin}">Admin Terminal</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Enterprise Stack</h4>
+          <p style="color: var(--color-light-pink); font-size: 0.85rem; margin-bottom: 0.5rem;">
+            Java 17 &bull; Spring Boot 3.2.5 &bull; Thymeleaf &bull; PostgreSQL
+          </p>
+          <p style="color: #94a3b8; font-size: 0.8rem;">
+            Render Cloud &bull; Docker Containerized
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>&copy; 2026 DhanabalMart Enterprise Marketplace. All Rights Reserved.</p>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

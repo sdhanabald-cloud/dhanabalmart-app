@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Manage Buyers')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Buyer <span class="gold-text">Directory</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.95rem;">Audit registered consumer profiles and oversee platform account standings</p>
+        </div>
+        <a th:href="@{/admin/dashboard}" class="btn btn-outline-pink btn-sm">&larr; Back to Dashboard</a>
+      </div>
+
+      <div th:if="${successMessage != null}" class="alert alert-success">
+        <span th:text="${successMessage}">Success!</span>
+      </div>
+      <div th:if="${errorMessage != null}" class="alert alert-danger">
+        <span th:text="${errorMessage}">Error!</span>
+      </div>
+
+      <div class="dm-card">
+        <div class="table-responsive">
+          <table class="dm-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Shipping Destination</th>
+                <th>Status</th>
+                <th>Account Governance</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="buyer : ${buyers}">
+                <td th:text="${buyer.id}">1</td>
+                <td><strong style="color: #FFF;" th:text="${buyer.user != null ? buyer.user.fullName : 'Buyer'}">Name</strong></td>
+                <td th:text="${buyer.user != null ? buyer.user.email : 'email'}">email</td>
+                <td th:text="${buyer.user != null ? buyer.user.phone : 'N/A'}">phone</td>
+                <td style="font-size: 0.85rem; color: #cbd5e1;">
+                  <span th:text="${buyer.shippingAddress != null ? buyer.shippingAddress : 'No address'}">Address</span>
+                  <span th:if="${buyer.city != null}" th:text="', ' + ${buyer.city}">, City</span>
+                </td>
+                <td>
+                  <span th:if="${buyer.user != null && buyer.user.status == 'ACTIVE'}" class="badge badge-olive">ACTIVE</span>
+                  <span th:if="${buyer.user != null && buyer.user.status != 'ACTIVE'}" class="badge badge-danger" th:text="${buyer.user.status}">BLOCKED</span>
+                </td>
+                <td>
+                  <form th:if="${buyer.user != null && buyer.user.status == 'ACTIVE'}" th:action="@{'/admin/buyers/' + ${buyer.user.id} + '/status'}" method="POST">
+                    <input type="hidden" name="status" value="BLOCKED">
+                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Suspend this user account?');">Suspend</button>
+                  </form>
+                  <form th:if="${buyer.user != null && buyer.user.status != 'ACTIVE'}" th:action="@{'/admin/buyers/' + ${buyer.user.id} + '/status'}" method="POST">
+                    <input type="hidden" name="status" value="ACTIVE">
+                    <button type="submit" class="btn btn-gold btn-sm">Activate</button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -1,55 +1,47 @@
 # ==========================================
 # DhanabalMart Production Multi-Stage Dockerfile
-# Stage 1: Build React Frontend
-# Stage 2: Build Java Spring Boot Backend
-# Stage 3: Minimal Eclipse Temurin JRE Production Runtime
+# 100% Pure Java Architecture
+# Stage 1: Build Java Spring Boot & Thymeleaf App (Maven + Temurin 17)
+# Stage 2: Minimal Eclipse Temurin 17 JRE Production Runtime
 # ==========================================
 
-# --- Stage 1: Build Frontend ---
-FROM node:20-alpine AS frontend-builder
-WORKDIR /app/frontend
-
-COPY frontend/package*.json ./
-RUN npm install
-
-COPY frontend/ ./
-RUN npm run build
-
-# --- Stage 2: Build Java Backend ---
-FROM maven:3.9.6-eclipse-temurin-17-alpine AS backend-builder
+# --- Stage 1: Build Java Application ---
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS builder
 WORKDIR /app/backend
 
-# Cache dependencies
+# Cache Maven dependencies layer
 COPY backend/pom.xml ./
 RUN mvn dependency:go-offline -B
 
-# Copy backend source
+# Copy Java source code and resources (Thymeleaf templates & CSS)
 COPY backend/src ./src
 
-# Bundle built React static assets into Spring Boot resources/static
-COPY --from=frontend-builder /app/frontend/dist ./src/main/resources/static
-
-# Package application JAR without running unit tests during docker build
+# Package production executable JAR without running tests during Docker build
 RUN mvn clean package -DskipTests
 
-# --- Stage 3: Production Runtime ---
+# --- Stage 2: Minimal Hardened Production Runtime ---
 FROM eclipse-temurin:17-jre-alpine AS runner
 WORKDIR /app
 
-# Add a non-root group and user for enhanced security
+# Add unprivileged security user
 RUN addgroup -S dhanabal && adduser -S dhanabal -G dhanabal
 
-# Copy the generated Spring Boot JAR
-COPY --from=backend-builder /app/backend/target/*.jar /app/dhanabalmart.jar
+# Copy compiled executable JAR from builder stage
+COPY --from=builder /app/backend/target/*.jar /app/dhanabalmart.jar
 RUN chown -R dhanabal:dhanabal /app
 
 USER dhanabal
 
-# Default environment configuration
+# Dynamic environment configuration
 ENV PORT=8080
-ENV NODE_ENV=production
+ENV SPRING_PROFILES_ACTIVE=prod
 
-# Render automatically sets PORT, our command binds server to 0.0.0.0:${PORT}
+# Expose HTTP port (Render dynamically allocates ${PORT})
 EXPOSE 8080
 
+# Health check configuration for Docker runtime
+HEALTHCHECK --interval=30s --timeout=5s --start-period=40s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://127.0.0.1:${PORT:-8080}/health || exit 1
+
+# Launch Spring Boot with dynamic Render PORT and 0.0.0.0 interface binding
 ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -Dserver.port=${PORT:-8080} -Dserver.address=0.0.0.0 -jar /app/dhanabalmart.jar"]

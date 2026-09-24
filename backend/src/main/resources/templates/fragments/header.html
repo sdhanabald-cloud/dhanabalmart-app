@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${title != null ? title + ' | DhanabalMart' : 'DhanabalMart — Luxury E-Commerce'}">DhanabalMart</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+  <header th:fragment="navbar" class="navbar">
+    <div class="container nav-inner">
+      <a th:href="@{/}" class="logo">
+        <div class="logo-icon">&#9818;</div>
+        <span class="gold-text">DhanabalMart</span>
+      </a>
+
+      <ul class="nav-links">
+        <li><a th:href="@{/}" th:classappend="${currentUri == '/' ? 'active' : ''}">Home</a></li>
+        <li><a th:href="@{/products}" th:classappend="${currentUri != null && currentUri.startsWith('/products') ? 'active' : ''}">Products</a></li>
+        <li><a th:href="@{/about}" th:classappend="${currentUri == '/about' ? 'active' : ''}">About</a></li>
+
+        <!-- Role-Specific Navigation Links -->
+        <li th:if="${userRole == 'ROLE_ADMIN'}">
+          <a th:href="@{/admin/dashboard}" th:classappend="${currentUri != null && currentUri.startsWith('/admin') ? 'active' : ''}">Admin Portal</a>
+        </li>
+        <li th:if="${userRole == 'ROLE_SELLER'}">
+          <a th:href="@{/seller/dashboard}" th:classappend="${currentUri != null && currentUri.startsWith('/seller') ? 'active' : ''}">Seller Center</a>
+        </li>
+        <li th:if="${userRole == 'ROLE_BUYER'}">
+          <a th:href="@{/buyer/dashboard}" th:classappend="${currentUri != null && currentUri.startsWith('/buyer') ? 'active' : ''}">My Account</a>
+        </li>
+      </ul>
+
+      <div class="nav-actions">
+        <!-- Cart button for Buyers -->
+        <a th:if="${userRole == 'ROLE_BUYER' || !isLoggedIn}" th:href="@{/cart}" class="btn btn-outline btn-sm">
+          <span>&#128722; Cart</span>
+          <span th:if="${cartItemCount > 0}" class="badge badge-gold" th:text="${cartItemCount}">0</span>
+        </a>
+
+        <!-- Logged In User Status -->
+        <div th:if="${isLoggedIn}" style="display: flex; align-items: center; gap: 0.75rem;">
+          <a th:href="${userRole == 'ROLE_ADMIN' ? '/admin/profile' : (userRole == 'ROLE_SELLER' ? '/seller/profile' : '/buyer/profile')}" class="user-badge">
+            <span th:text="${userRole == 'ROLE_ADMIN' ? '👑 Admin' : (userRole == 'ROLE_SELLER' ? '🏪 Seller' : '👤 Buyer')}">Role</span>
+            <strong th:text="${currentUser != null ? currentUser.fullName : ''}">User</strong>
+          </a>
+          <a th:href="@{/logout}" class="btn btn-brown btn-sm">Sign Out</a>
+        </div>
+
+        <!-- Not Logged In -->
+        <div th:unless="${isLoggedIn}" style="display: flex; gap: 0.5rem;">
+          <a th:href="@{/login}" class="btn btn-gold btn-sm">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </header>
+</body>
+</html>

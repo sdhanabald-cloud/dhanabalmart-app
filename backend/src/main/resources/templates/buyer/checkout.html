@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Checkout')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container" style="max-width: 980px;">
+      
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Secure <span class="gold-text">Checkout</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.95rem;">Complete your transaction and confirm delivery coordinates</p>
+        </div>
+        <a th:href="@{/cart}" class="btn btn-outline-pink btn-sm">&larr; Return to Cart</a>
+      </div>
+
+      <div th:if="${errorMessage != null}" class="alert alert-danger">
+        <span th:text="${errorMessage}">Error message</span>
+      </div>
+
+      <form th:action="@{/checkout}" method="POST">
+        <div class="grid" style="grid-template-columns: 3fr 2fr; align-items: start;">
+          
+          <!-- SHIPPING & PAYMENT FORM -->
+          <div>
+            <div class="dm-card" style="margin-bottom: 1.5rem;">
+              <h2 style="font-size: 1.25rem; color: #FFF; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span class="badge badge-gold">1</span> Delivery Information
+              </h2>
+
+              <div class="form-group">
+                <label class="form-label" for="shippingAddress">Full Shipping Address</label>
+                <textarea id="shippingAddress" name="shippingAddress" rows="3" required class="form-textarea"
+                          placeholder="e.g. 742 Evergreen Terrace, Apt 4B, Springfield, OR 97477"
+                          th:text="${buyer != null && buyer.shippingAddress != null ? buyer.shippingAddress : ''}"></textarea>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label">Contact Recipient</label>
+                  <input type="text" class="form-input" th:value="${user.fullName}" readonly style="opacity: 0.8;">
+                </div>
+                <div class="form-group">
+                  <label class="form-label">Contact Phone</label>
+                  <input type="text" class="form-input" th:value="${user.phone}" readonly style="opacity: 0.8;">
+                </div>
+              </div>
+            </div>
+
+            <div class="dm-card">
+              <h2 style="font-size: 1.25rem; color: #FFF; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+                <span class="badge badge-gold">2</span> Payment Method
+              </h2>
+
+              <div class="form-group">
+                <label class="form-label" for="paymentMethod">Select Payment Channel</label>
+                <select id="paymentMethod" name="paymentMethod" class="form-select">
+                  <option value="CARD">Credit / Debit Card (Visa, MasterCard, Amex)</option>
+                  <option value="UPI">Instant UPI / NetBanking</option>
+                  <option value="COD">Cash On Delivery (COD)</option>
+                </select>
+              </div>
+
+              <div style="background: rgba(3, 33, 33, 0.7); border: var(--gold-border); border-radius: 8px; padding: 1rem; font-size: 0.85rem; color: var(--color-light-pink);">
+                <span>&#128274; Test Transaction Simulator: Payments are processed instantly and safely stored in the PostgreSQL ledger with unique transaction UUIDs.</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- SUMMARY COLUMN -->
+          <div class="dm-card" style="background: var(--color-peacock-dark);">
+            <h2 style="font-size: 1.25rem; color: #FFF; margin-bottom: 1.25rem;">Items in Order</h2>
+
+            <div th:each="item : ${cart.items}" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(232,201,207,0.1);">
+              <div>
+                <strong style="color: #FFF; font-size: 0.9rem;" th:text="${item.product.name}">Product</strong>
+                <div style="font-size: 0.78rem; color: var(--color-light-pink);" th:text="${item.quantity} + ' &times; $' + ${#numbers.formatDecimal(item.priceAtAddition, 1, 2)}">1 x $0.00</div>
+              </div>
+              <span style="color: var(--color-gold); font-weight: 700; font-size: 0.95rem;" th:text="'$' + ${#numbers.formatDecimal(item.priceAtAddition * item.quantity, 1, 2)}">$0.00</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 1rem; color: #cbd5e1; font-size: 0.9rem;">
+              <span>Subtotal</span>
+              <span th:text="'$' + ${#numbers.formatDecimal(cartTotal, 1, 2)}">$0.00</span>
+            </div>
+
+            <div style="display: flex; justify-content: space-between; margin-top: 0.5rem; color: #cbd5e1; font-size: 0.9rem;">
+              <span>White Glove Delivery</span>
+              <span style="color: #4ade80;">Included</span>
+            </div>
+
+            <div style="border-top: 1px solid rgba(212,175,55,0.3); padding-top: 1rem; margin-top: 1rem; display: flex; justify-content: space-between; align-items: baseline;">
+              <span style="font-size: 1.15rem; font-weight: 700;">Final Amount</span>
+              <span class="gold-text" style="font-size: 1.8rem; font-family: var(--font-serif);" th:text="'$' + ${#numbers.formatDecimal(cartTotal, 1, 2)}">$0.00</span>
+            </div>
+
+            <button type="submit" class="btn btn-gold btn-lg" style="width: 100%; margin-top: 1.5rem;">
+              Authorize & Confirm Order &rarr;
+            </button>
+          </div>
+
+        </div>
+      </form>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

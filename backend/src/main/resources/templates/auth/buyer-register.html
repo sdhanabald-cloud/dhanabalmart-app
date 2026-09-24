@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Create Buyer Account')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container" style="max-width: 520px;">
+      
+      <div class="dm-card" style="padding: 2.5rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem; color: var(--color-gold);">&#128717;</div>
+          <h1 style="font-size: 1.8rem; color: #FFFFFF;">Join <span class="gold-text">DhanabalMart</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.88rem; margin-top: 0.25rem;">
+            Create your shopper account to purchase exclusive products
+          </p>
+        </div>
+
+        <div th:if="${error != null}" class="alert alert-danger">
+          <span th:text="${error}">Error message</span>
+        </div>
+
+        <form th:action="@{/register/buyer}" method="POST">
+          <div class="form-group">
+            <label class="form-label" for="fullName">Full Name</label>
+            <input type="text" id="fullName" name="fullName" placeholder="e.g. Balakarkki S" required class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="you@domain.com" required class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="phone">Phone Number</label>
+            <input type="text" id="phone" name="phone" placeholder="+1-555-0100" required class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="shippingAddress">Default Shipping Address (Optional)</label>
+            <input type="text" id="shippingAddress" name="shippingAddress" placeholder="123 Park Avenue, Suite 100" class="form-input">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="city">City</label>
+              <input type="text" id="city" name="city" placeholder="New York" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="postalCode">Postal Code</label>
+              <input type="text" id="postalCode" name="postalCode" placeholder="10001" class="form-input">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Minimum 6 characters" required class="form-input">
+          </div>
+
+          <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 1rem; padding: 0.85rem;">
+            Create My Shopper Account
+          </button>
+        </form>
+
+        <div style="margin-top: 1.75rem; text-align: center; font-size: 0.85rem;">
+          <a th:href="@{/login/buyer}" style="color: var(--color-light-pink);">Already have an account? Sign in here &rarr;</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

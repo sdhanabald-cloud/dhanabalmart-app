@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Admin Terminal Dashboard')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <div class="page-header">
+        <div>
+          <span class="badge badge-gold" style="margin-bottom: 0.5rem;">System Control Terminal</span>
+          <h1 class="page-title">Marketplace <span class="gold-text">Governance</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.95rem;">Real-time platform telemetry, merchant approvals, and financial ledger</p>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem;">
+          <a th:href="@{/admin/sellers}" class="btn btn-outline btn-sm">Manage Sellers</a>
+          <a th:href="@{/admin/reports}" class="btn btn-gold btn-sm">Financial Reports</a>
+        </div>
+      </div>
+
+      <!-- METRICS GRID -->
+      <div class="grid grid-cols-4" style="margin-bottom: 2rem;">
+        <div class="stat-card">
+          <span class="stat-value gold-text" th:text="'$' + ${#numbers.formatDecimal(stats.totalRevenue, 1, 2)}">$0.00</span>
+          <span class="stat-label">Total Platform GMV</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" style="color: #60a5fa;" th:text="${stats.totalOrders}">0</span>
+          <span class="stat-label">Executed Orders</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" style="color: #4ade80;" th:text="${stats.approvedSellers}">0</span>
+          <span class="stat-label">Active Sellers</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" style="color: #c084fc;" th:text="${stats.totalProducts}">0</span>
+          <span class="stat-label">Marketplace Products</span>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-3" style="margin-bottom: 2rem;">
+        <div class="stat-card">
+          <span class="stat-value" style="color: var(--color-light-pink);" th:text="${stats.totalBuyers}">0</span>
+          <span class="stat-label">Registered Buyers</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" th:style="${stats.pendingSellers > 0 ? 'color: #f87171;' : 'color: #4ade80;'}" th:text="${stats.pendingSellers}">0</span>
+          <span class="stat-label">Pending Merchant Approvals</span>
+        </div>
+        <div class="stat-card">
+          <span class="stat-value" style="color: var(--color-gold);" th:text="${stats.totalUsers}">0</span>
+          <span class="stat-label">Total User Accounts</span>
+        </div>
+      </div>
+
+      <!-- QUICK MANAGEMENT BUTTONS -->
+      <div class="grid grid-cols-4" style="margin-bottom: 2.5rem;">
+        <a th:href="@{/admin/sellers}" class="dm-card" style="text-align: center; text-decoration: none; padding: 1.25rem;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--color-gold);">&#127978;</div>
+          <h3 style="color: #FFF; font-size: 1.05rem;">Sellers</h3>
+          <p style="color: var(--color-light-pink); font-size: 0.8rem;">Approve & moderate stores</p>
+        </a>
+
+        <a th:href="@{/admin/buyers}" class="dm-card" style="text-align: center; text-decoration: none; padding: 1.25rem;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--color-gold);">&#128101;</div>
+          <h3 style="color: #FFF; font-size: 1.05rem;">Buyers</h3>
+          <p style="color: var(--color-light-pink); font-size: 0.8rem;">Monitor accounts & status</p>
+        </a>
+
+        <a th:href="@{/admin/products}" class="dm-card" style="text-align: center; text-decoration: none; padding: 1.25rem;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--color-gold);">&#128717;</div>
+          <h3 style="color: #FFF; font-size: 1.05rem;">Catalog</h3>
+          <p style="color: var(--color-light-pink); font-size: 0.8rem;">Platform-wide inventory</p>
+        </a>
+
+        <a th:href="@{/admin/orders}" class="dm-card" style="text-align: center; text-decoration: none; padding: 1.25rem;">
+          <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--color-gold);">&#128220;</div>
+          <h3 style="color: #FFF; font-size: 1.05rem;">Orders</h3>
+          <p style="color: var(--color-light-pink); font-size: 0.8rem;">Global transaction log</p>
+        </a>
+      </div>
+
+      <!-- RECENT ORDERS STREAM -->
+      <div class="dm-card">
+        <div class="page-header" style="margin-bottom: 1.25rem;">
+          <h2 style="font-size: 1.25rem; color: #FFF;">Recent Platform Orders</h2>
+          <a th:href="@{/admin/orders}" class="btn btn-outline-pink btn-sm">View All Orders &rarr;</a>
+        </div>
+
+        <div th:if="${recentOrders != null && !recentOrders.isEmpty()}" class="table-responsive">
+          <table class="dm-table">
+            <thead>
+              <tr>
+                <th>Order Number</th>
+                <th>Buyer</th>
+                <th>Total GMV</th>
+                <th>Status</th>
+                <th>Payment</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="order : ${recentOrders}">
+                <td><strong style="color: var(--color-gold);" th:text="${order.orderNumber}">DBM-123</strong></td>
+                <td th:text="${order.buyer != null && order.buyer.user != null ? order.buyer.user.fullName : 'Buyer'}">Name</td>
+                <td style="color: var(--color-gold); font-weight: 700;" th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 1, 2)}">$0.00</td>
+                <td>
+                  <span th:if="${order.orderStatus == 'PENDING'}" class="badge badge-gold">Pending</span>
+                  <span th:if="${order.orderStatus == 'PROCESSING'}" class="badge badge-brown">Processing</span>
+                  <span th:if="${order.orderStatus == 'SHIPPED'}" class="badge badge-pink">Shipped</span>
+                  <span th:if="${order.orderStatus == 'DELIVERED'}" class="badge badge-olive">Delivered</span>
+                  <span th:if="${order.orderStatus == 'CANCELLED'}" class="badge badge-danger">Cancelled</span>
+                </td>
+                <td>
+                  <span th:if="${order.payment != null}" class="badge badge-olive" th:text="${order.payment.status}">PAID</span>
+                </td>
+                <td style="font-size: 0.82rem; color: #cbd5e1;" th:text="${#temporals.format(order.createdAt, 'yyyy-MM-dd HH:mm')}">Date</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

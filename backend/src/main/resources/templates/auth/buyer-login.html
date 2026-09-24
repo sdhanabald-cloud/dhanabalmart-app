@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Buyer Sign In')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container" style="max-width: 480px;">
+      
+      <div class="dm-card" style="padding: 2.5rem;">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <div style="font-size: 3rem; margin-bottom: 0.5rem; color: var(--color-gold);">&#128717;</div>
+          <h1 style="font-size: 1.8rem; color: #FFFFFF;">Buyer <span class="gold-text">Sign In</span></h1>
+          <p style="color: var(--color-light-pink); font-size: 0.88rem; margin-top: 0.25rem;">
+            Access your cart, order history, and personal luxury wishlist
+          </p>
+        </div>
+
+        <div th:if="${message != null}" class="alert alert-success">
+          <span th:text="${message}">Success message</span>
+        </div>
+
+        <div th:if="${error != null}" class="alert alert-danger">
+          <span th:text="${error}">Error message</span>
+        </div>
+
+        <form th:action="@{/login/buyer}" method="POST">
+          <div class="form-group">
+            <label class="form-label" for="email">Account Email</label>
+            <input type="email" id="email" name="email" th:value="${email != null ? email : 'buyer1@gmail.com'}" required class="form-input">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <input type="password" id="password" name="password" value="Buyer@123" required class="form-input">
+          </div>
+
+          <button type="submit" class="btn btn-gold" style="width: 100%; margin-top: 1rem; padding: 0.8rem;">
+            Sign In To Shopping Account
+          </button>
+        </form>
+
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(232,201,207,0.15); text-align: center; font-size: 0.85rem;">
+          <p style="color: #cbd5e1; margin-bottom: 0.5rem;">New to DhanabalMart?</p>
+          <a th:href="@{/register/buyer}" class="btn btn-outline-pink btn-sm">Create Buyer Account</a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

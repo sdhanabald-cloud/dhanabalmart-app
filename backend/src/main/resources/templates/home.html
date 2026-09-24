@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: head('Home')}"></head>
+<body>
+  <div th:replace="~{fragments/header :: navbar}"></div>
+
+  <main class="main-content">
+    <div class="container">
+      
+      <!-- HERO SECTION -->
+      <section class="hero">
+        <span class="badge badge-gold" style="margin-bottom: 1rem;">Premier Multi-Vendor Marketplace</span>
+        <h1>Curated Luxury, <br><span class="gold-text">Timeless Excellence</span></h1>
+        <p>
+          Discover elite artisanal goods, precision timepieces, handcrafted leather, and fine jewelry curated by certified merchants across the nation.
+        </p>
+        <div class="hero-actions">
+          <a th:href="@{/products}" class="btn btn-gold btn-lg">Explore Catalog &rarr;</a>
+          <a th:href="@{/login}" class="btn btn-outline btn-lg">Access Portals</a>
+        </div>
+      </section>
+
+      <!-- CATEGORIES SECTION -->
+      <section style="margin-bottom: 3.5rem;">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Curated <span class="gold-text">Categories</span></h2>
+            <p style="color: var(--color-light-pink); font-size: 0.95rem;">Browse our marketplace by exclusive department</p>
+          </div>
+          <a th:href="@{/products}" class="btn btn-outline-pink btn-sm">View All &rarr;</a>
+        </div>
+
+        <div class="grid grid-cols-4">
+          <div th:each="cat : ${categories}" class="dm-card" style="text-align: center; padding: 1.5rem;">
+            <div style="font-size: 2rem; margin-bottom: 0.5rem; color: var(--color-gold);">&#9733;</div>
+            <h3 th:text="${cat.name}" style="font-size: 1.1rem; margin-bottom: 0.4rem; color: #FFF;">Category</h3>
+            <p th:text="${cat.description}" style="color: #cbd5e1; font-size: 0.82rem; margin-bottom: 1rem; height: 2.6rem; overflow: hidden;">Description</p>
+            <a th:href="@{/products(category=${cat.id})}" class="btn btn-brown btn-sm" style="width: 100%;">Browse</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURED PRODUCTS -->
+      <section style="margin-bottom: 3.5rem;">
+        <div class="page-header">
+          <div>
+            <h2 class="page-title">Featured <span class="gold-text">Offerings</span></h2>
+            <p style="color: var(--color-light-pink); font-size: 0.95rem;">Hand-selected items from our verified marketplace sellers</p>
+          </div>
+          <a th:href="@{/products}" class="btn btn-gold btn-sm">All Products &rarr;</a>
+        </div>
+
+        <div class="product-grid">
+          <div th:each="product : ${featuredProducts}" class="product-card">
+            <div class="img-wrap">
+              <img th:if="${product.imageUrl != null && !product.imageUrl.isEmpty()}" th:src="${product.imageUrl}" th:alt="${product.name}">
+              <div th:unless="${product.imageUrl != null && !product.imageUrl.isEmpty()}" style="font-size: 3rem; color: var(--color-gold);">&#128717;</div>
+            </div>
+            <div class="content">
+              <div class="category-tag" th:text="${product.category != null ? product.category.name : 'Exclusive'}">Category</div>
+              <h3 class="title" th:text="${product.name}">Product Name</h3>
+              <p class="desc" th:text="${product.description}">Product description...</p>
+              
+              <div class="bottom-bar">
+                <span class="price" th:text="'$' + ${#numbers.formatDecimal(product.price, 1, 2)}">$0.00</span>
+                <div style="display: flex; gap: 0.4rem;">
+                  <a th:href="@{'/products/' + ${product.id}}" class="btn btn-outline btn-sm">View</a>
+                  <form th:if="${userRole == 'ROLE_BUYER' || !isLoggedIn}" th:action="@{/cart/add}" method="POST" style="display: inline;">
+                    <input type="hidden" name="productId" th:value="${product.id}">
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="btn btn-brown btn-sm">&#128722;</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- VALUE PROPOSITIONS -->
+      <section class="dm-card" style="padding: 2.5rem; margin-bottom: 2rem; background: var(--color-peacock-dark);">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <h2 class="page-title">The <span class="gold-text">DhanabalMart</span> Standard</h2>
+          <p style="color: var(--color-light-pink); max-width: 600px; margin: 0 auto;">Engineered for security, built on pure Java, and verified across all operations.</p>
+        </div>
+
+        <div class="grid grid-cols-3">
+          <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">&#128101;</div>
+            <h3 style="color: var(--color-gold); margin-bottom: 0.5rem; font-size: 1.15rem;">Verified Merchants</h3>
+            <p style="color: #cbd5e1; font-size: 0.88rem;">Every seller undergoes administrator validation before listing catalog inventory.</p>
+          </div>
+
+          <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">&#128274;</div>
+            <h3 style="color: var(--color-gold); margin-bottom: 0.5rem; font-size: 1.15rem;">Relational Integrity</h3>
+            <p style="color: #cbd5e1; font-size: 0.88rem;">Powered by ACID-compliant PostgreSQL schema and transactional order lifecycles.</p>
+          </div>
+
+          <div style="text-align: center; padding: 1rem;">
+            <div style="font-size: 2.5rem; margin-bottom: 0.75rem;">&#9889;</div>
+            <h3 style="color: var(--color-gold); margin-bottom: 0.5rem; font-size: 1.15rem;">Enterprise Java Runtime</h3>
+            <p style="color: #cbd5e1; font-size: 0.88rem;">100% Pure Java Spring Boot 3 with high throughput, zero client-side dependencies, and native containerization.</p>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>
